@@ -1,0 +1,14 @@
+Integrantes: Denis Agustin Guerra, Andres Fernando Riveros, Octavio Curadelli, Hugo Sanchez Tomas Gonzalez, Lucas Gaston Sosa Bastias, Matías German Montañez Gigena
+
+
+Juego de Tanques multijugador
+
+Nombre: Tanks 2050
+
+Resumen: El Juego trata en un mapa infinito con formato de laberinto con partes en relieve, donde los jugadores podran jugar en equipos o en un modo de deathmatch, cada player va a ser representado por un tanque, los juadores podran eleir 4 tipos de tanques que tendran cada uno caracteristicas  hailidades unicas.
+
+Justificacion: Idea propuesta por el profesor.
+
+Entorno de desarrollo: Godot
+
+Lenguaje de programacion: gdscript(lenguaje basado en python)
