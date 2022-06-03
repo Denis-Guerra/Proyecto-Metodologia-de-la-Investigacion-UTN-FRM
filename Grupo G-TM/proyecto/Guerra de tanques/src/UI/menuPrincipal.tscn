@@ -1,0 +1,178 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/UI/listaJugadores.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/UI/menuPrincipal.gd" type="Script" id=2]
+[ext_resource path="res://src/UI/nombreJugador.gd" type="Script" id=3]
+[ext_resource path="res://src/UI/listaJugadores.gd" type="Script" id=4]
+
+[node name="MenuPrincipal" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="PanelRed" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -143.0
+margin_top = -137.0
+margin_right = 213.0
+margin_bottom = 150.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="nombreJugador" type="LineEdit" parent="PanelRed"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -59.1629
+margin_top = 29.9706
+margin_right = 64.8371
+margin_bottom = 53.9706
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HTTPRequest" type="HTTPRequest" parent="PanelRed/nombreJugador"]
+
+[node name="port" type="LineEdit" parent="PanelRed"]
+anchor_top = 0.667
+anchor_bottom = 0.667
+margin_left = 66.0
+margin_top = -7.429
+margin_right = 141.001
+margin_bottom = 16.571
+text = "25565"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PanelRed"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -60.0
+margin_top = 9.0
+margin_right = 66.0
+margin_bottom = 23.0
+text = "Nombre del Jugador"
+
+[node name="Label2" type="Label" parent="PanelRed"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -156.0
+margin_top = 138.0
+margin_right = -72.9999
+margin_bottom = 152.0
+text = "IP:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="PanelRed"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -165.0
+margin_top = 188.0
+margin_right = -81.9996
+margin_bottom = 202.0
+text = "Puerto:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="serverIP" type="LineEdit" parent="PanelRed"]
+anchor_top = 0.544
+anchor_bottom = 0.544
+margin_left = 46.0
+margin_top = -23.128
+margin_right = 161.0
+margin_bottom = 0.871979
+text = "192.168.1.27"
+
+[node name="host" type="Button" parent="PanelRed"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 30.0
+margin_top = 38.0
+margin_right = 129.0
+margin_bottom = 58.0
+text = "hostear server"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Unirse" type="Button" parent="PanelRed"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 12.0
+margin_top = -1.0
+margin_right = 151.0
+margin_bottom = 19.0
+text = "unirse a un servidor"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelPreJuego" type="Panel" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -81.5
+margin_top = -137.0
+margin_right = 81.5
+margin_bottom = 137.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SeleccionNivel" type="Button" parent="PanelPreJuego"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -42.0842
+margin_top = -28.0229
+margin_right = 44.9158
+margin_bottom = -8.02292
+text = "Seleccionar nivel"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PanelPreJuego"]
+margin_left = 21.0
+margin_top = 13.0
+margin_right = 143.0
+margin_bottom = 27.0
+text = "jugadores conectados:"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelPreJuego"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -58.4977
+margin_top = -105.312
+margin_right = 63.5023
+margin_bottom = 63.6877
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="panelClientePreJuego" parent="." instance=ExtResource( 1 )]
+visible = false
+
+[connection signal="request_completed" from="PanelRed/nombreJugador/HTTPRequest" to="PanelRed/nombreJugador" method="_on_HTTPRequest_request_completed"]
+[connection signal="text_changed" from="PanelRed/port" to="." method="_on_port_text_changed"]
+[connection signal="pressed" from="PanelRed/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="PanelRed/Unirse" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="PanelPreJuego/SeleccionNivel" to="." method="_on_Select_Level_pressed"]
