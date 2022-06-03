@@ -33,7 +33,7 @@ script = ExtResource( 3 )
 transform = Transform( 1, 0, 0, 0, 0.0332598, 0.999447, 0, -0.999447, 0.0332598, -0.294, 40, -5.578 )
 fov = 97.1
 
-[node name="SpawnButton" type="Button" parent="Camera"]
+[node name="btnAparecer" type="Button" parent="Camera"]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -56,4 +56,4 @@ transform = Transform( -0.387336, -0.468239, 0.794181, -0.0135011, 0.864213, 0.5
 light_color = Color( 1, 0.998167, 0.89, 1 )
 shadow_enabled = true
 
-[connection signal="pressed" from="Camera/SpawnButton" to="." method="_on_SpawnButton_pressed"]
+[connection signal="pressed" from="Camera/btnAparecer" to="." method="_on_SpawnButton_pressed"]

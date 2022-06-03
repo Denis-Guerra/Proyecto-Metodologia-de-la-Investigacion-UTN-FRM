@@ -15,21 +15,21 @@ var angularVel = 0.0
 func _physics_process(delta):
 	if Gamestate.informacion_del_jugador.net_id == 1:
 		var input = Gamestate.get_my_input(parent.id)
-		var toLookAt = parent.get_node("cameraTarget/Camera").project_frow_view_on_y_plane(input.mouse_position, $head/BulletSpawner.global_transform[3].y)
+		var toLookAt = parent.get_node("cameraTarget/Camera").vistaDeCamaraPlana(input.mouse_position, $head/BulletSpawner.global_transform[3].y)
 		
 		
-		var oldRot = -(self.rotation.y + get_parent().rotation.y - PI/2)
+		var rotacionVieja = -(self.rotation.y + get_parent().rotation.y - PI/2)
 		var globalTrans = self.global_transform[3]
-		var rotToGetTo = atan2(toLookAt.z - globalTrans.z, toLookAt.x - globalTrans.x) + (oldRot - fmod(oldRot,2*PI))
-		var possibleRots = [rotToGetTo - 2*PI, rotToGetTo, rotToGetTo + 2*PI]
-		var possibleDistances = [	abs(possibleRots[0] - oldRot),
-									abs(possibleRots[1] - oldRot),
-									abs(possibleRots[2] - oldRot)]
-		var argmin = argmin(possibleDistances)
-		var decidedRot = possibleRots[argmin]
+		var rotacionParaLlegarA = atan2(toLookAt.z - globalTrans.z, toLookAt.x - globalTrans.x) + (rotacionVieja - fmod(rotacionVieja,2*PI))
+		var rotacionPosible = [rotacionParaLlegarA - 2*PI, rotacionParaLlegarA, rotacionParaLlegarA + 2*PI]
+		var posibleDistancia = [	abs(rotacionPosible[0] - rotacionVieja),
+									abs(rotacionPosible[1] - rotacionVieja),
+									abs(rotacionPosible[2] - rotacionVieja)]
+		var argmin = argmin(posibleDistancia)
+		var rotacionDec = rotacionPosible[argmin]
 		
-		var direction = sign(decidedRot - oldRot)
-		var distance = abs (possibleDistances[argmin] - PI)
+		var direction = sign(rotacionDec - rotacionVieja)
+		var distance = abs (posibleDistancia[argmin] - PI)
 		self.rotation.y = self.rotation.y + direction * delta * min(distance,1) * ROT_velocidad
 		rset("master_rotation", self.rotation.y)
 	else:

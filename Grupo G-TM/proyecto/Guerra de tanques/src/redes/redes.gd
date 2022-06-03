@@ -10,7 +10,7 @@ signal jugador_Desconectado
 
 
 var info_servidor = {
-	name = "Server",      # nombre servidor
+	name = "Server",      # name servidor
 	maximo_jugadores = 4,      # maximo jugadores
 	puerto_usado = 4546         # puerto
 }

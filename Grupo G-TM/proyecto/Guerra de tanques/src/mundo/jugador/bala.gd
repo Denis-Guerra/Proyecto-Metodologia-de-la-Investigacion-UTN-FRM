@@ -1,21 +1,21 @@
 extends KinematicBody
 
-puppet var master_position = null
+puppet var posicionMaestra = null
 
 var velocidad = 30.0
-var thrower
-var throwerId = 0
-var hasBounced = false
+var lanzada
+var lanzadaID = 0
+var rebote = false
 func _ready():
-	throwerId = thrower.id
+	lanzadaID = lanzada.id
 
 
 func _physics_process(delta):
 	var col = self.move_and_collide(self.transform.basis.xform(Vector3.FORWARD * velocidad) * delta)
 	if Gamestate.informacion_del_jugador.net_id == 1:
-		rset("master_position",self.translation)
-	elif master_position != null:
-		self.translation = master_position
+		rset("posicionMaestra",self.translation)
+	elif posicionMaestra != null:
+		self.translation = posicionMaestra
 	
 	if not col == null:
 		var body = (col as KinematicCollision).collider
@@ -24,7 +24,7 @@ func _physics_process(delta):
 			if Gamestate.informacion_del_jugador.net_id == 1:
 				self.queue_free()
 				rpc("remote_queue_free")
-		elif Network.jugador[throwerId].bonuses.has(Gamestate.rebotebala) and not hasBounced:
+		elif Network.jugador[lanzadaID].bonuses.has(Gamestate.rebotebala) and not rebote:
 			bounce(col)
 		else:
 			if Gamestate.informacion_del_jugador.net_id == 1:
@@ -40,11 +40,11 @@ remote func remote_queue_free():
 func bounce(col : KinematicCollision):
 	var normal = col.normal
 	var direction = self.global_transform.basis.xform(Vector3(Vector3.FORWARD))
-	var incidenceAngle = acos((-normal).dot(direction))
+	var anguloIndice = acos((-normal).dot(direction))
 	var toRefl = sign(Vector3(normal.z,0,-normal.x).dot(direction))
 	
-	self.rotation.y = PI + atan2(normal.x,normal.z) + toRefl * incidenceAngle
-	hasBounced = true
+	self.rotation.y = PI + atan2(normal.x,normal.z) + toRefl * anguloIndice
+	rebote = true
 
 
 

@@ -38,7 +38,7 @@ remote func addPlayer(playerIdx):
 	print("addPlayer :", playerIdx," dic : ", Network.jugador[playerIdx])
 	var agregar = load("res://src/mundo/jugador/tanque.tscn").instance()
 	agregar.id = Network.jugador[playerIdx].net_id
-	agregar.name = "Player" + str(Network.jugador[playerIdx].net_id)
+	agregar.name = "Jugador" + str(Network.jugador[playerIdx].net_id)
 	self.add_child(agregar)
 	agregar.master_translation = puntos_de_spawn[Contador_jugadores]
 	agregar.translation = puntos_de_spawn[Contador_jugadores]
@@ -62,7 +62,7 @@ remote func trae_camara_muerta(id):
 func actualizar_nuevo_jugador(net_id):
 	var agregar = []
 	for child in get_children():
-		agregar.append({"filename" : child.filename, "name" : child.name})
+		agregar.append({"filename" : child.filename, "nombre" : child.name})
 	rpc_id(net_id, "bienvenida", agregar)
 
 

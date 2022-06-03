@@ -1,7 +1,6 @@
 extends Control
 #127.0.0.1
 #localhost
-#MacBook-Air-de-Pierre.local
 #192.168.1.27
 
 func _ready():

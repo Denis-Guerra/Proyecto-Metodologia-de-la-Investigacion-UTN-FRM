@@ -42,13 +42,13 @@ remote func disparo(name = null):
 		agregar.name = str(parent.id) + str(contador_de_disparo)
 		contador_de_disparo += 1
 		contador_de_disparo = contador_de_disparo%999
-	agregar.thrower = parent
+	agregar.lanzada = parent
 	parent.get_parent().add_child(agregar)
 	agregar.global_transform = $BulletSpawner.global_transform
 	agregar.scale = Vector3.ONE
 	agregar.rotate_object_local(Vector3.RIGHT, PI/2)
 	var toDot = get_parent().global_transform.basis.xform(Vector3.FORWARD)
-	var velocidadIncr = (parent.velocity as Vector3).dot(toDot)
+	var velocidadIncr = (parent.velocidad1 as Vector3).dot(toDot)
 	var toAddvelocidad = velocidad_bala_impulsada if Network.jugador[parent.id].bonuses.has(Gamestate.ImpulsoDeVelBala) else velocidad_balas
 	agregar.velocidad = toAddvelocidad + velocidadIncr
 	
