@@ -35,7 +35,7 @@ func _configurar_jugadores():
 	emit_signal("aparece_jugador")
 
 remote func addPlayer(playerIdx):
-	print("addPlayer :", playerIdx," dic : ", Network.jugador[playerIdx])
+	print("jugador :", playerIdx," dic : ", Network.jugador[playerIdx])
 	var agregar = load("res://src/mundo/jugador/tanque.tscn").instance()
 	agregar.id = Network.jugador[playerIdx].net_id
 	agregar.name = "Jugador" + str(Network.jugador[playerIdx].net_id)
@@ -55,8 +55,10 @@ remote func Actualiza_camara():
 remote func trae_camara_muerta(id):
 	if id == Gamestate.informacion_del_jugador.net_id:
 		get_parent().get_node("Camera").current = true
-		get_parent().get_node("Camera/SpawnButton").disabled = false
-		get_parent().get_node("Camera/SpawnButton").visible = true
+		get_parent().get_node("Camera/btnAparecer").disabled = false
+		get_parent().get_node("Camera/btnAparecer").visible = true
+		get_parent().get_node("Camera/btnSalir").disabled = false
+		get_parent().get_node("Camera/btnSalir").visible = true
 
 
 func actualizar_nuevo_jugador(net_id):
