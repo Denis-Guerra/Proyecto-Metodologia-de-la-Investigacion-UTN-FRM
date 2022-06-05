@@ -1,19 +1,28 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://src/mundo/niveles/ffaLevel.gd" type="Script" id=1]
 [ext_resource path="res://src/mundo/props/contenedorJugadores.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/mundo/jugador/meshRes/Material_002.material" type="Material" id=3]
+[ext_resource path="res://src/mundo/niveles/concrete_floor_worn_001_diff_1k.png" type="Texture" id=4]
+[ext_resource path="res://src/mundo/niveles/rock_boulder_cracked_diff_1k.png" type="Texture" id=5]
+[ext_resource path="res://src/mundo/niveles/floor_bricks_02_diff_1k.png" type="Texture" id=6]
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_texture = ExtResource( 5 )
+
+[sub_resource type="SpatialMaterial" id=7]
+albedo_texture = ExtResource( 4 )
 
 [sub_resource type="SpatialMaterial" id=4]
-
-[sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 0.203922, 0.0431373, 0.0431373, 1 )
 
 [sub_resource type="SpatialMaterial" id=5]
 albedo_color = Color( 0.301961, 0.0627451, 0.427451, 1 )
 
+[sub_resource type="SpatialMaterial" id=9]
+
 [sub_resource type="SpatialMaterial" id=6]
-albedo_color = Color( 0, 0.0980392, 0.462745, 1 )
+albedo_color = Color( 0.576471, 0.576471, 0.576471, 1 )
+albedo_texture = ExtResource( 6 )
 
 [sub_resource type="ProceduralSky" id=1]
 
@@ -32,47 +41,60 @@ glow_enabled = true
 [node name="Spatial" type="Spatial" groups=["wellcoming"]]
 script = ExtResource( 1 )
 
-[node name="CSGCombiner" type="CSGCombiner" parent="."]
-material_override = ExtResource( 3 )
-use_collision = true
-
-[node name="CSGBox5" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -124.642, 5.80165, 0 )
-material_override = SubResource( 4 )
-height = 30.0
-depth = 180.0
-
-[node name="CSGBox3" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.66982, 78.4974 )
-width = 250.0
-height = 30.0
-depth = 3.0
-
-[node name="CSGBox" type="CSGBox" parent="CSGCombiner"]
+[node name="CSGBox" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0190291, 0, 0 )
+material_override = SubResource( 8 )
+use_collision = true
 width = 250.0
 height = 3.0
 depth = 160.0
 
-[node name="CSGBox2" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.02551, 4.73834, -79.9573 )
+[node name="Paredes" type="CSGCombiner" parent="."]
+material_override = SubResource( 7 )
+use_collision = true
+
+[node name="CSGBox4" type="CSGBox" parent="Paredes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.88, 124.067, 5.8, 0 )
+height = 30.0
+depth = 180.0
+
+[node name="CSGBox3" type="CSGBox" parent="Paredes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.8, 78.497 )
 width = 250.0
 height = 30.0
 depth = 3.0
 
-[node name="CSGBox4" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 123.299, 2.90083, 0 )
+[node name="CSGBox5" type="CSGBox" parent="Paredes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.88, -124.024, 5.8, 0 )
+material_override = SubResource( 4 )
 height = 30.0
 depth = 180.0
 
+[node name="CSGBox2" type="CSGBox" parent="Paredes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 5.8, -79.957 )
+width = 250.0
+height = 30.0
+depth = 3.0
+
+[node name="CSGCombiner" type="CSGCombiner" parent="."]
+material_override = ExtResource( 3 )
+use_collision = true
+
+[node name="CSGCylinder" type="CSGCylinder" parent="CSGCombiner"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 86.1786, 8.55401, 50.8538 )
+material_override = SubResource( 5 )
+use_collision = true
+radius = 38.0593
+height = 34.1929
+
 [node name="CSGBox6" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( -0.261699, 0.257308, -0.930218, 0.567594, 0.820554, 0.0672921, 0.780609, -0.510376, -0.360785, 78.7161, -3.15081, -40.3439 )
+transform = Transform( -0.0382764, -0.0553358, 0.997734, 0.567589, 0.820558, 0.0672839, -0.822422, 0.568878, -4.36123e-08, 78.7161, -3.15081, -40.3439 )
 width = 29.7576
 height = 56.9907
 
 [node name="CSGBox7" type="CSGBox" parent="CSGCombiner"]
 transform = Transform( 0.445745, 0, -0.89516, 0, 1, 0, 0.89516, 0, 0.445745, -71.5261, 8.57774, -27.2792 )
-material_override = SubResource( 3 )
+material_override = SubResource( 9 )
 width = 20.4262
 height = 16.3631
 depth = 48.0272
@@ -83,29 +105,6 @@ operation = 2
 width = 23.6239
 height = 8.44032
 depth = 49.4203
-
-[node name="CSGCylinder2" type="CSGCylinder" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 121.834, 11.9138, 76.0657 )
-height = 21.836
-
-[node name="CSGCylinder3" type="CSGCylinder" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -122.691, 10.7687, 75.9119 )
-height = 26.8353
-
-[node name="CSGCylinder4" type="CSGCylinder" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 121.297, 11.9911, -77.7848 )
-height = 22.1385
-
-[node name="CSGCylinder5" type="CSGCylinder" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -122.819, 10.6546, -77.3978 )
-height = 20.3185
-
-[node name="CSGCylinder" type="CSGCylinder" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 86.1786, 8.55401, 50.8538 )
-material_override = SubResource( 5 )
-use_collision = true
-radius = 38.0593
-height = 34.1929
 
 [node name="CSGCylinder2" type="CSGCylinder" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04614, 15.9819, 1.44979 )
