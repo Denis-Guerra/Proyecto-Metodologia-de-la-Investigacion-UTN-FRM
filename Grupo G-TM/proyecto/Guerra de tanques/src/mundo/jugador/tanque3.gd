@@ -1,7 +1,8 @@
-# TANQUE 1 CARACTERISTICA: VALANCEADO
+#TANQUE 2 CARACTERISTICA: DISPARO RAPIDO MOVIMIENTO LENTO
+
 extends KinematicBody
 
-export var id = -1
+export var id = -3
 
 puppet var master_translation
 
@@ -11,13 +12,13 @@ const gravedad = 50.0
 puppet var yaw = 0
 
 
-var velocidad = 20.0
-var impulso_velocidad = 25.0
+var velocidad = 10.0
+var impulso_velocidad = 15.0
 var fuerza_salto = 20.0
 
 
 var impulsoHaciaAdelante = 0.0
-var ROT_velocidad = 1.0
+var ROT_velocidad = 1.5
 var BSTD_ROT_velocidad = 2.5
 var accvelocidad = 2.0
 var deccvelocidad = 4.0
