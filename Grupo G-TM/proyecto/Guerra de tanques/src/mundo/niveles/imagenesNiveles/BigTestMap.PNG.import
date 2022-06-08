@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bigTestMap.PNG-49761369e1d7f636767d692b6ed24622.stex"
+path="res://.import/BigTestMap.PNG-a0791fdfda58d79e81c73d17e516decf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/mundo/niveles/imagenesNiveles/bigTestMap.PNG"
-dest_files=[ "res://.import/bigTestMap.PNG-49761369e1d7f636767d692b6ed24622.stex" ]
+source_file="res://src/mundo/niveles/imagenesNiveles/BigTestMap.PNG"
+dest_files=[ "res://.import/BigTestMap.PNG-a0791fdfda58d79e81c73d17e516decf.stex" ]
 
 [params]
 
