@@ -1,3 +1,4 @@
+# TANQUE 1 CARACTERISTICA: VALANCEADO
 extends KinematicBody
 
 export var id = -1
