@@ -25,11 +25,14 @@ func _on_join_pressed():
 	Gamestate.informacion_del_jugador.name = $PanelRed/nombreJugador.text
 	Network.unirse_a_servidor($PanelRed/serverIP.text)
 
-func _on_Select_Level_pressed():
-	Network.mapa_selecionado()
+
 
 func _on_port_text_changed(new_text):
 	Network.info_servidor.puerto_usado = int(new_text)
 
 
 
+
+
+func _on_seleccionTanque_pressed():
+	get_tree().change_scene("res://src/UI/SeleccionTanque.tscn")

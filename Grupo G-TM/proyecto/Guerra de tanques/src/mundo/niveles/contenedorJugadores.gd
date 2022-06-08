@@ -36,7 +36,7 @@ func _configurar_jugadores():
 
 remote func addPlayer(playerIdx):
 	print("jugador :", playerIdx," dic : ", Network.jugador[playerIdx])
-	var agregar = load("res://src/mundo/jugador/tanque.tscn").instance()
+	var agregar = load(Gamestate.informacion_del_jugador.tanque).instance()
 	agregar.id = Network.jugador[playerIdx].net_id
 	agregar.name = "Jugador" + str(Network.jugador[playerIdx].net_id)
 	self.add_child(agregar)

@@ -133,7 +133,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SeleccionNivel" type="Button" parent="PanelPreJuego"]
+[node name="seleccionTanque" type="Button" parent="PanelPreJuego"]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -142,7 +142,7 @@ margin_left = -42.0842
 margin_top = -28.0229
 margin_right = 44.9158
 margin_bottom = -8.02292
-text = "Seleccionar nivel"
+text = "Seleccionar Tanque"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -175,4 +175,4 @@ visible = false
 [connection signal="text_changed" from="PanelRed/port" to="." method="_on_port_text_changed"]
 [connection signal="pressed" from="PanelRed/host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="PanelRed/Unirse" to="." method="_on_join_pressed"]
-[connection signal="pressed" from="PanelPreJuego/SeleccionNivel" to="." method="_on_Select_Level_pressed"]
+[connection signal="pressed" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_pressed"]

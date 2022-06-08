@@ -3,7 +3,8 @@ var informacion_del_jugador = {
 	name = "Player",                   
 	net_id = 1,                        # por defecto cada jugador recibe una id
 	listo_para_iniciar_juego = false,
-	bonuses = []
+	bonuses = [],
+	tanque = ""
 }
 
 enum {ImpulsoDeVelocidad,turnBoost,ImpulsoDeVelBala,rebotebala,balaDividida}
