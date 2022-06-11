@@ -1,0 +1,305 @@
+OPTIMIZACION CPU
+
+Medición de desempeño¶
+Tenemos que saber dónde están los "cuellos de botella" para saber cómo acelerar nuestro programa. Los cuellos de botella son las partes más lentas del programa que limitan la velocidad a la que todo puede progresar. Centrarse en los cuellos de botella nos permite concentrar nuestros esfuerzos en optimizar las áreas que nos darán la mayor mejora de velocidad, en lugar de perder mucho tiempo optimizando funciones que conducirán a pequeñas mejoras de rendimiento.
+
+Para la CPU, la forma más fácil de identificar cuellos de botella es usar un generador de perfiles.
+
+Perfiladores de CPU¶
+Los generadores de perfiles se ejecutan junto con su programa y toman medidas de tiempo para determinar qué proporción de tiempo se dedica a cada función.
+
+El IDE de Godot tiene convenientemente un generador de perfiles incorporado. No se ejecuta cada vez que inicia su proyecto: debe iniciarse y detenerse manualmente. Esto se debe a que, como la mayoría de los perfiladores, registrar estas mediciones de tiempo puede ralentizar significativamente su proyecto.
+
+Después de perfilar, puede volver a mirar los resultados de un marco.
+
+../../_images/godot_profiler.png
+Captura de pantalla del perfilador de Godot
+Resultados de un perfil de uno de los proyectos de demostración.¶
+
+Nota
+
+Podemos ver el costo de los procesos integrados, como la física y el audio, así como el costo de nuestras propias funciones de secuencias de comandos en la parte inferior.
+
+Es posible que el tiempo dedicado a esperar varios servidores integrados no se cuente en los generadores de perfiles. Este es un error conocido.
+
+Cuando un proyecto se ejecuta con lentitud, a menudo verá que una función o proceso obvio toma mucho más tiempo que otros. Este es su cuello de botella principal y, por lo general, puede aumentar la velocidad optimizando esta área.
+
+Para obtener más información sobre el uso del generador de perfiles integrado de Godot, consulte Panel del depurador.
+
+Perfiladores externos¶
+Aunque el generador de perfiles IDE de Godot es muy conveniente y útil, a veces se necesita más potencia y la capacidad de perfilar el código fuente del motor de Godot.
+
+Puede utilizar varios generadores de perfiles de terceros para hacer esto, incluidos Valgrind , VerySleepy , HotSpot , Visual Studio e Intel VTune .
+
+Nota
+
+Deberá compilar Godot desde la fuente para usar un generador de perfiles de terceros. Esto es necesario para obtener símbolos de depuración. También puede usar una compilación de depuración; sin embargo, tenga en cuenta que los resultados de la generación de perfiles de una compilación de depuración serán diferentes a los de una compilación de lanzamiento, porque las compilaciones de depuración están menos optimizadas. Los cuellos de botella a menudo se encuentran en un lugar diferente en las compilaciones de depuración, por lo que debe perfilar las compilaciones de lanzamiento siempre que sea posible.
+
+Captura de pantalla de Callgrind
+Resultados de ejemplo de Callgrind, que es parte de Valgrind.¶
+
+Desde la izquierda, Callgrind enumera el porcentaje de tiempo dentro de una función y sus elementos secundarios (Inclusivo), el porcentaje de tiempo dedicado dentro de la función en sí, excluyendo las funciones secundarias (Self), la cantidad de veces que se llama a la función, el nombre de la función y el archivo o módulo.
+
+En este ejemplo, podemos ver que casi todo el tiempo se dedica a la función Main::iteration() . Esta es la función maestra en el código fuente de Godot que se llama repetidamente. Hace que se dibujen marcos, se simulen marcas de física y se actualicen nodos y scripts. Una gran parte del tiempo se dedica a las funciones para renderizar un lienzo (66 %), porque este ejemplo utiliza un punto de referencia 2D. Debajo de esto, vemos que casi el 50% del tiempo se pasa fuera del código de Godot en libglapiy i965_dri(el controlador de gráficos). Esto nos dice que una gran parte del tiempo de la CPU se gasta en el controlador de gráficos.
+
+En realidad, este es un excelente ejemplo porque, en un mundo ideal, solo se dedicaría una proporción muy pequeña de tiempo al controlador de gráficos. Esta es una indicación de que hay un problema con demasiada comunicación y trabajo que se está realizando en la API de gráficos. Este perfilado específico condujo al desarrollo del procesamiento por lotes 2D, que acelera enormemente la representación 2D al reducir los cuellos de botella en esta área.
+
+Funciones de sincronización manual¶
+Otra técnica útil, especialmente una vez que haya identificado el cuello de botella con un generador de perfiles, es cronometrar manualmente la función o el área bajo prueba. Los detalles varían según el idioma, pero en GDScript, haría lo siguiente:
+
+var time_start = OS.get_ticks_usec()
+
+# Your function you want to time
+update_enemies()
+
+var time_end = OS.get_ticks_usec()
+print("update_enemies() took %d microseconds" % time_end - time_start)
+Cuando se cronometran manualmente las funciones, suele ser una buena idea ejecutar la función muchas veces (1000 o más veces), en lugar de una sola vez (a menos que sea una función muy lenta). La razón para hacer esto es que los temporizadores a menudo tienen una precisión limitada. Además, las CPU programarán los procesos de forma desordenada. Por lo tanto, un promedio de una serie de ejecuciones es más preciso que una sola medición.
+
+Mientras intenta optimizar las funciones, asegúrese de perfilarlas repetidamente o cronometrarlas a medida que avanza. Esto le dará información crucial sobre si la optimización está funcionando (o no).
+
+oculto¶
+Las caches de la CPU son unas cosas a las que hay que tener muy en cuenta, especialmente cuando se comparan los resultados de las medidas de tiempo de dos versiones diferentes de una función. Los resultados pueden ser muy dependientes del hecho de que los datos estén en la cache de la CPU o no. Las CPUs no cargan los datos directamente desde la RAM del sistema, aunque esta sea enorme en comparación de la cache de la CPU (varios gigabytes en vez de algunos megabytes). Esto es así debido a que el acceso a la RAM del sistema es muy lento. En su lugar, las CPUs cargan los datos banco de memoria pequeño y rápido llamado cache. Cargar datos desde la cache es muy rápido, pero cada vez que intentas acceder a una dirección de memoria que no esta almacenada en la cache, la misma tendrá que ir a la memoria principal y lentamente cargar algunos datos. Esta demora puede resultar en que la CPU se quede inactiva por un tiempo largo, lo que es conocido como "cache miss".
+
+Esto significa que la primera vez que ejecuta una función, puede que se ejecute lentamente porque los datos no están en la memoria caché de la CPU. La segunda y posteriores veces, puede ejecutarse mucho más rápido porque los datos están en el caché. Debido a esto, siempre use promedios cuando cronometre y tenga en cuenta los efectos del caché.
+
+Comprender el almacenamiento en caché también es crucial para la optimización de la CPU. Si tiene un algoritmo (rutina) que carga pequeños bits de datos de áreas dispersas aleatoriamente de la memoria principal, esto puede resultar en muchas fallas de caché, la mayor parte del tiempo, la CPU estará esperando datos en lugar de hacer cualquier trabajo. En cambio, si puede hacer que sus accesos a los datos estén localizados, o incluso mejor, acceda a la memoria de forma lineal (como una lista continua), entonces el caché funcionará de manera óptima y la CPU podrá funcionar lo más rápido posible.
+
+Godot generalmente se encarga de esos detalles de bajo nivel por ti. Por ejemplo, las API del servidor se aseguran de que los datos estén optimizados para el almacenamiento en caché para cosas como la representación y la física. Aún así, debe tener especial cuidado con el almacenamiento en caché al usar GDNative .
+
+Idiomas¶
+Godot admite varios idiomas diferentes, y vale la pena tener en cuenta que existen compensaciones involucradas. Algunos lenguajes están diseñados para facilitar su uso a costa de la velocidad, y otros son más rápidos pero más difíciles de manejar.
+
+Las funciones del motor integrado se ejecutan a la misma velocidad, independientemente del lenguaje de secuencias de comandos que elija. Si su proyecto está haciendo muchos cálculos en su propio código, considere mover esos cálculos a un lenguaje más rápido.
+
+GDScript¶
+GDScript está diseñado para ser fácil de usar e iterar, y es ideal para crear muchos tipos de juegos. Sin embargo, en este lenguaje, la facilidad de uso se considera más importante que el rendimiento. Si necesita hacer cálculos pesados, considere mover parte de su proyecto a uno de los otros idiomas.
+
+C#¶
+C# es popular y tiene soporte de primera clase en Godot. Ofrece un buen compromiso entre velocidad y facilidad de uso. Sin embargo, tenga cuidado con las posibles pausas en la recolección de basura y las fugas que pueden ocurrir durante el juego. Un enfoque común para solucionar problemas con la recolección de basura es usar la agrupación de objetos , que está fuera del alcance de esta guía.
+
+Otros idiomas¶
+Los terceros brindan soporte para varios otros lenguajes, incluidos Rust y Javascript .
+
+C++¶
+Godot está escrito en C++. El uso de C++ generalmente dará como resultado el código más rápido. Sin embargo, a nivel práctico, es el más difícil de implementar en las máquinas de los usuarios finales en diferentes plataformas. Las opciones para usar C++ incluyen módulos personalizados y nativos de GDN .
+
+Hilos¶
+Considere usar subprocesos cuando realice muchos cálculos que puedan ejecutarse en paralelo entre sí. Las CPU modernas tienen múltiples núcleos, cada uno capaz de realizar una cantidad limitada de trabajo. Al distribuir el trabajo en varios subprocesos, puede avanzar más hacia la máxima eficiencia de la CPU.
+
+La desventaja de los hilos es que tienes que ser increíblemente cuidadoso. Como cada núcleo de la CPU funciona de forma independiente, pueden terminar intentando acceder a la misma memoria al mismo tiempo. Un subproceso puede leer una variable mientras otro escribe: esto se denomina condición de carrera . Antes de usar subprocesos, asegúrese de comprender los peligros y cómo tratar de prevenir estas condiciones de carrera.
+
+Los subprocesos también pueden dificultar considerablemente la depuración. El depurador de GDScript aún no admite la configuración de puntos de interrupción en subprocesos.
+
+Para obtener más información sobre subprocesos, consulte Usando múltiples hilos.
+
+Árbol de Escenas¶
+Aunque los nodos son un concepto increíblemente poderoso y versátil, tenga en cuenta que cada nodo tiene un costo. Las funciones integradas como _process() y _physics_process() se propagan a través del árbol. Esta limpieza puede reducir el rendimiento cuando tiene una gran cantidad de nodos (generalmente miles).
+
+Cada nodo se maneja individualmente en el renderizador de Godot. Por lo tanto, una menor cantidad de nodos con más en cada uno puede generar un mejor rendimiento.
+
+Una peculiaridad de SceneTree es que a veces puede obtener un rendimiento mucho mejor eliminando nodos de SceneTree, en lugar de pausarlos u ocultarlos. No es necesario que elimine un nodo desconectado. Por ejemplo, puede mantener una referencia a un nodo, separarlo del árbol de la escena usando Node.remove_child(node) y luego volver a adjuntarlo más tarde usando Node.add_child(node) . Esto puede ser muy útil para agregar y eliminar áreas de un juego, por ejemplo.
+
+Puede evitar el SceneTree por completo utilizando las API del servidor. Para obtener más información, consulte Optimización mediante servidores .
+
+Física¶
+En algunas situaciones, la física puede acabar convirtiéndose en un cuello de botella. Este es particularmente el caso con mundos complejos y un gran número de objetos físicos.
+
+Aquí hay algunas técnicas para acelerar la física:
+
+Intente usar versiones simplificadas de su geometría renderizada para formas de colisión. A menudo, esto no será perceptible para los usuarios finales, pero puede aumentar considerablemente el rendimiento.
+
+Intente eliminar objetos de la física cuando estén fuera de la vista / fuera del área actual, o reutilice los objetos físicos (tal vez permita 8 monstruos por área, por ejemplo, y reutilícelos).
+
+Otro aspecto crucial de la física es la tasa de ticks de la física. En algunos juegos, puede reducir considerablemente la tasa de tic y, en lugar de, por ejemplo, actualizar la física 60 veces por segundo, puede actualizarlos solo 30 o incluso 20 veces por segundo. Esto puede reducir en gran medida la carga de la CPU.
+
+La desventaja de cambiar la tasa de tic de la física es que puede obtener movimientos bruscos o fluctuaciones cuando la tasa de actualización de la física no coincide con los fotogramas por segundo representados. Además, la disminución de la tasa de tic de física aumentará el retraso de entrada. Se recomienda apegarse a la frecuencia de marca física predeterminada (60 Hz) en la mayoría de los juegos que cuentan con movimiento de jugadores en tiempo real.
+
+La solución al jitter es utilizar la interpolación de intervalos de tiempo fijos , que consiste en suavizar las posiciones renderizadas y las rotaciones en varios fotogramas para que coincidan con la física. Puede implementar esto usted mismo o usar un complemento de terceros . En cuanto al rendimiento, la interpolación es una operación muy barata en comparación con ejecutar un tick de física. Es mucho más rápido, por lo que esto puede ser una ganancia significativa en el rendimiento y al mismo tiempo reducir la inestabilidad.
+
+
+OPTIMIZACION GPU
+
+Introducción¶
+La demanda de nuevas funciones gráficas y el progreso casi garantiza que encontrará cuellos de botella en los gráficos. Algunos de estos pueden estar en el lado de la CPU, por ejemplo, en los cálculos dentro del motor Godot para preparar objetos para renderizar. También pueden ocurrir cuellos de botella en la CPU en el controlador de gráficos, que ordena las instrucciones para pasar a la GPU, y en la transferencia de estas instrucciones. Y, por último, también se producen cuellos de botella en la propia GPU.
+
+El lugar donde se producen cuellos de botella en el renderizado depende en gran medida del hardware. Las GPU móviles, en particular, pueden tener problemas con las escenas que se ejecutan fácilmente en el escritorio.
+
+Comprender e investigar los cuellos de botella de la GPU es ligeramente diferente a la situación en la CPU. Esto se debe a que, a menudo, solo puede cambiar el rendimiento indirectamente cambiando las instrucciones que le da a la GPU. Además, puede ser más difícil tomar medidas. En muchos casos, la única forma de medir el rendimiento es examinando los cambios en el tiempo dedicado a renderizar cada fotograma.
+
+Dibujar llamadas, cambios de estado y API¶
+Nota
+
+La siguiente sección no es relevante para los usuarios finales, pero es útil para proporcionar información básica que es relevante en secciones posteriores.
+
+Godot envía instrucciones a la GPU a través de una API de gráficos (OpenGL, OpenGL ES o Vulkan). La actividad de comunicación y controlador involucrada puede ser bastante costosa, especialmente en OpenGL y OpenGL ES. Si podemos proporcionar estas instrucciones de la forma que prefieran el controlador y la GPU, podemos aumentar considerablemente el rendimiento.
+
+Casi todos los comandos de API en OpenGL requieren una cierta cantidad de validación para asegurarse de que la GPU esté en el estado correcto. Incluso los comandos aparentemente simples pueden generar una ráfaga de tareas domésticas entre bastidores. Por lo tanto, el objetivo es reducir estas instrucciones al mínimo y agrupar objetos similares tanto como sea posible para que puedan renderizarse juntos, o con el mínimo número de estos costosos cambios de estado.
+
+Procesamiento por lotes 2D¶
+En 2D, los costos de tratar cada elemento individualmente pueden ser prohibitivamente altos: fácilmente puede haber miles de ellos en la pantalla. Esta es la razón por la que se utiliza el procesamiento por lotes 2D . Varios artículos similares se agrupan y representan en un lote, a través de una sola llamada de sorteo, en lugar de hacer una llamada de sorteo por separado para cada artículo. Además, esto significa que los cambios de estado, material y textura pueden reducirse al mínimo.
+
+Para obtener más información sobre el procesamiento por lotes en 2D, consulte Optimización mediante procesamiento por lotes.
+
+Procesamiento por lotes 3D¶
+En 3D, nuestro objetivo sigue siendo minimizar los sorteos y los cambios de estado. Sin embargo, puede ser más difícil agrupar varios objetos en una sola llamada de sorteo. Las mallas 3D tienden a comprender cientos o miles de triángulos, y combinar mallas grandes en tiempo real es prohibitivamente costoso. Los costos de unirlos superan rápidamente cualquier beneficio a medida que crece el número de triángulos por malla. Una alternativa mucho mejor es unir las mallas con anticipación (mallas estáticas entre sí). Esto puede ser hecho por artistas o programáticamente dentro de Godot.
+
+También hay un costo por agrupar objetos en 3D. Varios objetos representados como uno no se pueden seleccionar individualmente. Una ciudad entera que está fuera de la pantalla aún se representará si se une a una sola brizna de hierba que está en la pantalla. Por lo tanto, siempre debe tener en cuenta la ubicación de los objetos y la selección cuando intente agrupar objetos 3D por lotes. A pesar de esto, los beneficios de unir objetos estáticos a menudo superan otras consideraciones, especialmente para una gran cantidad de objetos distantes o de baja poli.
+
+Para obtener más información sobre optimizaciones específicas de 3D, consulte Optimizando las prestaciones en 3D.
+
+Reutilizar sombreadores y materiales¶
+El renderizador Godot es un poco diferente a lo que existe. Está diseñado para minimizar los cambios de estado de la GPU tanto como sea posible. SpatialMaterial hace un buen trabajo al reutilizar materiales que necesitan sombreadores similares. Si se utilizan sombreadores personalizados, asegúrese de reutilizarlos tanto como sea posible. Las prioridades de Godot son:
+
+Reutilización de materiales: Cuantos menos materiales diferentes haya en la escena, más rápido será el renderizado. Si una escena tiene una gran cantidad de objetos (en cientos o miles), intente reutilizar los materiales. En el peor de los casos, use atlas para disminuir la cantidad de cambios de textura.
+
+Reutilización de sombreadores: si los materiales no se pueden reutilizar, al menos intente reutilizar los sombreadores. Nota: los shaders se reutilizan automáticamente entre SpatialMaterials que comparten la misma configuración (características que se habilitan o deshabilitan con una casilla de verificación) incluso si tienen parámetros diferentes.
+
+Si una escena tiene, por ejemplo, 20.000 objetos con 20.000 materiales diferentes cada uno, el renderizado será lento. Si la misma escena tiene objetos de 20,000, pero solo usa materiales de 100, el renderizado será mucho más rápido.
+
+Costo de píxeles frente a costo de vértice¶
+Es posible que haya escuchado que cuanto menor sea el número de polígonos en un modelo, más rápido se renderizará. Esto es realmente relativo y depende de muchos factores.
+
+En una PC y una consola modernas, el costo de vértice es bajo. Las GPU originalmente solo representaban triángulos. Esto significaba que cada cuadro:
+
+Todos los vértices tuvieron que ser transformados por la CPU (incluido el recorte).
+
+Todos los vértices debían enviarse a la memoria de la GPU desde la RAM principal.
+
+Hoy en día, todo esto se maneja dentro de la GPU, aumentando enormemente el rendimiento. Los artistas 3D generalmente tienen la sensación equivocada sobre el rendimiento del multicuenta porque los DCC 3D (como Blender, Max, etc.) necesitan mantener la geometría en la memoria de la CPU para poder editarla, reduciendo el rendimiento real. Los motores de juegos dependen más de la GPU, por lo que pueden representar muchos triángulos de manera mucho más eficiente.
+
+En los dispositivos móviles, la historia es diferente. Las GPU de PC y consola son monstruos de fuerza bruta que pueden extraer tanta electricidad como necesiten de la red eléctrica. Las GPU móviles están limitadas a una batería diminuta, por lo que deben ser mucho más eficientes energéticamente.
+
+Para ser más eficientes, las GPU móviles intentan evitar sobregiro. El sobregiro se produce cuando el mismo píxel en la pantalla se representa más de una vez. Imagina una ciudad con varios edificios. Las GPU no saben qué es visible y qué está oculto hasta que lo dibujan. Por ejemplo, se puede dibujar una casa y luego otra casa frente a ella (lo que significa que la renderización se realizó dos veces para el mismo píxel). A las GPU de PC normalmente no les importa mucho esto y simplemente lanzan más procesadores de píxeles al hardware para aumentar el rendimiento (lo que también aumenta el consumo de energía).
+
+Usar más energía no es una opción en dispositivos móviles, por lo que los dispositivos móviles usan una técnica llamada renderizado basado en mosaicos que divide la pantalla en una cuadrícula. Cada celda mantiene la lista de triángulos dibujados en ella y los ordena por profundidad para minimizar sobredibujar. Esta técnica mejora el rendimiento y reduce el consumo de energía, pero afecta el rendimiento de los vértices. Como resultado, se pueden procesar menos vértices y triángulos para dibujar.
+
+Además, el renderizado basado en mosaicos tiene problemas cuando hay objetos pequeños con mucha geometría dentro de una pequeña porción de la pantalla. Esto obliga a las GPU móviles a ejercer mucha presión sobre un mosaico de una sola pantalla, lo que disminuye considerablemente el rendimiento, ya que todas las demás celdas deben esperar a que se complete antes de mostrar el marco.
+
+En resumen, no se preocupe por el recuento de vértices en dispositivos móviles, pero evite la concentración de vértices en partes pequeñas de la pantalla. Si un personaje, NPC, vehículo, etc.está lejos (lo que significa que parece pequeño), use un modelo de menor nivel de detalle (LOD). Incluso en las GPU de escritorio, es preferible evitar tener triángulos más pequeños que el tamaño de un píxel en la pantalla.
+
+Preste atención al procesamiento de vértice adicional requerido al usar:
+
+Skinning (animación esquelética)
+
+Morphs (claves de forma)
+
+Objetos iluminados por vértices (común en dispositivos móviles)
+
+Sombreadores de píxeles/fragmentos y tasa de relleno¶
+En contraste con el procesamiento de vértices, los costos del sombreado de fragmentos (por píxel) han aumentado drásticamente a lo largo de los años. Las resoluciones de pantalla han aumentado (el área de una pantalla 4K es de 8 294 400 píxeles, frente a los 307 200 de una pantalla VGA de 640 × 480 antigua, es decir, 27 veces el área), pero también se ha disparado la complejidad de los sombreadores de fragmentos. La representación física requiere cálculos complejos para cada fragmento.
+
+Puede probar si un proyecto tiene una tasa de llenado limitada con bastante facilidad. Desactive V-Sync para evitar limitar los cuadros por segundo, luego compare los cuadros por segundo cuando se ejecuta con una ventana grande, con una ventana muy pequeña. También puede beneficiarse al reducir de manera similar el tamaño de su mapa de sombras si usa sombras. Por lo general, encontrará que el FPS aumenta bastante usando una pequeña ventana, lo que indica que, en cierta medida, tiene una tasa de llenado limitada. Por otro lado, si hay poco o ningún aumento en FPS, entonces su cuello de botella está en otra parte.
+
+Puede aumentar el rendimiento en un proyecto con tasa de llenado limitada al reducir la cantidad de trabajo que tiene que hacer la GPU. Puede hacer esto simplificando el sombreador (quizás desactive las opciones costosas si está usando un SpatialMaterial ) o reduciendo la cantidad y el tamaño de las texturas utilizadas.
+
+Cuando se dirija a dispositivos móviles, considere usar los sombreadores más simples posibles que razonablemente pueda permitirse el lujo de usar.
+
+Leer texturas¶
+El otro factor en los sombreadores de fragmentos es el costo de leer texturas. La lectura de texturas es una operación costosa, especialmente cuando se lee de varias texturas en un sombreador de un solo fragmento. Además, tenga en cuenta que el filtrado puede ralentizarlo aún más (filtrado trilineal entre mipmaps y promediado). La lectura de texturas también es costosa en términos de uso de energía, lo cual es un gran problema en los móviles.
+
+Si usa sombreadores de terceros o escribe sus propios sombreadores, intente usar algoritmos que requieran la menor cantidad posible de lecturas de textura.
+
+Compresión de texturas¶
+De forma predeterminada, Godot comprime las texturas de los modelos 3D cuando se importan mediante compresión de RAM de vídeo (VRAM). La compresión de la RAM de video no es tan eficiente en tamaño como PNG o JPG cuando se almacena, pero aumenta enormemente el rendimiento al dibujar texturas lo suficientemente grandes.
+
+Esto se debe a que el objetivo principal de la compresión de texturas es la reducción del ancho de banda entre la memoria y la GPU.
+
+En 3D, la forma de los objetos depende más de la geometría que de la textura, por lo que la compresión generalmente no se nota. En 2D, la compresión depende más de las formas dentro de las texturas, por lo que el resultado de la compresión es más visible.
+
+A modo de advertencia, la mayoría de los dispositivos Android no admiten la compresión de texturas con transparencia (sólo opacas), así que tenlo en cuenta.
+
+Nota
+
+Incluso en 3D, las texturas "pixel art" deben tener desactivada la compresión VRAM, ya que afectará negativamente a su apariencia, sin mejorar significativamente el rendimiento debido a su baja resolución.
+
+Postprocesamiento y sombras¶
+Los efectos de posprocesamiento y las sombras también pueden ser costosos en términos de actividad de sombreado de fragmentos. Siempre pruebe el impacto de estos en diferentes hardware.
+
+Reducir el tamaño de los mapas de sombras puede aumentar el rendimiento , tanto en términos de escritura como de lectura de los mapas de sombras. Además de eso, la mejor manera de mejorar el rendimiento de las sombras es desactivar las sombras para tantas luces y objetos como sea posible. Los OmniLights/SpotLights más pequeños o distantes a menudo pueden tener sus sombras desactivadas con solo un pequeño impacto visual.
+
+Transparencia y mezcla¶
+Los objetos transparentes presentan problemas particulares para la eficiencia de representación. Los objetos opacos (especialmente en 3D) se pueden renderizar esencialmente en cualquier orden y el Z-buffer se asegurará de que solo se sombreen la mayoría de los objetos frontales. Los objetos transparentes o mezclados son diferentes. En la mayoría de los casos, no pueden depender del búfer Z y deben renderizarse en el "orden del pintor" (es decir, de atrás hacia adelante) para que luzcan correctos.
+
+Los objetos transparentes también son particularmente malos para la tasa de relleno, porque todos los elementos deben dibujarse incluso si otros objetos transparentes se dibujarán encima más adelante.
+
+Los objetos opacos no tienen que hacer esto. Por lo general, pueden aprovechar el búfer Z escribiendo en el búfer Z solo primero, luego solo realizando el sombreador de fragmentos en el fragmento "ganador", el objeto que está al frente en un píxel en particular.
+
+La transparencia es especialmente costosa cuando se superponen varios objetos transparentes. Por lo general, es mejor usar áreas transparentes lo más pequeñas posible para minimizar estos requisitos de tasa de llenado, especialmente en dispositivos móviles, donde la tasa de llenado es muy costosa. De hecho, en muchas situaciones, renderizar una geometría opaca más compleja puede terminar siendo más rápido que usar la transparencia para "hacer trampa".
+
+Asesoramiento multiplataforma¶
+Si tiene como objetivo lanzar en varias plataformas, pruebe temprano y con frecuencia en todas sus plataformas, especialmente en dispositivos móviles. Desarrollar un juego en una computadora de escritorio pero intentar portarlo a un dispositivo móvil en el último minuto es una receta para el desastre.
+
+En general, debe diseñar su juego para el mínimo común denominador y luego agregar mejoras opcionales para plataformas más potentes. Por ejemplo, es posible que desee utilizar el backend de GLES2 para plataformas móviles y de escritorio en las que se dirige a ambas.
+
+Renderizadores móviles/en mosaico¶
+Como se describió anteriormente, las GPU en los dispositivos móviles funcionan de manera radicalmente diferente a las GPU en las computadoras de escritorio. La mayoría de los dispositivos móviles utilizan renderizadores de mosaicos. Los renderizadores de mosaicos dividen la pantalla en mosaicos de tamaño regular que caben en una memoria caché súper rápida, lo que reduce la cantidad de operaciones de lectura/escritura en la memoria principal.
+
+Sin embargo, hay algunas desventajas. La representación en mosaico puede hacer que ciertas técnicas sean mucho más complicadas y costosas de realizar. Los mosaicos que se basan en los resultados de renderizar en diferentes mosaicos o en los resultados de operaciones anteriores que se conservan pueden ser muy lentos. Tenga mucho cuidado al probar el rendimiento de los sombreadores, las texturas de la ventana gráfica y el procesamiento posterior.
+
+
+OPTIMIZAR 3D
+
+Optimizando las prestaciones en 3D¶
+Votación¶
+Godot realizará automáticamente la selección de vista frustum para evitar renderizar objetos que están fuera de la ventana gráfica. Esto funciona bien para los juegos que tienen lugar en un área pequeña, sin embargo, las cosas pueden volverse problemáticas rápidamente en niveles más grandes.
+
+Eliminación de oclusión¶
+Al caminar por una ciudad, por ejemplo, es posible que solo pueda ver algunos edificios en la calle en la que se encuentra, así como el cielo y algunos pájaros que vuelan sobre su cabeza. Sin embargo, en lo que respecta a un renderizador ingenuo, aún puede ver toda la ciudad. No solo renderizará los edificios frente a ti, también renderizará la calle detrás de eso, con la gente en esa calle, los edificios detrás de eso. Rápidamente termina en situaciones en las que intenta renderizar 10x o 100x más de lo que es visible.
+
+Las cosas no son tan malas como parecen, porque el búfer Z generalmente permite que la GPU solo sombree completamente los objetos que están en el frente. Esto se llama paso previo de profundidad y está habilitado de forma predeterminada en Godot cuando se usa el renderizador GLES3. Sin embargo, los objetos innecesarios siguen reduciendo el rendimiento.
+
+Una forma en la que potencialmente podemos reducir la cantidad a renderizar es aprovechar la oclusión.
+
+Por ejemplo, en nuestro escenario de calles de la ciudad, es posible que pueda calcular de antemano que solo puede ver otras dos calles, By C, desde la calle A. Calles Da Zestán ocultas. Para aprovechar la oclusión, todo lo que tiene que hacer es calcular cuándo su espectador está en la calle A(quizás usando las áreas de Godot), luego puede ocultar las otras calles.
+
+Este ejemplo es una versión manual de lo que se conoce como conjunto potencialmente visible . Es una técnica muy poderosa para acelerar el renderizado. También puede usarlo para restringir la física o la IA al área local y acelerarlos, así como la representación.
+
+Representación de portales¶
+Sin embargo, hay una manera mucho más fácil de aprovechar la oclusión. Godot presenta un sistema de representación de portal avanzado, que puede realizar la eliminación de oclusión de cámaras y luces. Consulte Salas y portales .
+
+Este no es un sistema completamente automático y requiere alguna configuración manual. Sin embargo, potencialmente ofrece aumentos de rendimiento significativos.
+
+Nota
+
+En algunos casos, puede adaptar el diseño de su nivel para agregar más oportunidades de oclusión. Por ejemplo, puede agregar más paredes para evitar que el jugador vea demasiado lejos, lo que disminuiría el rendimiento debido a la pérdida de oportunidades para la eliminación de oclusiones.
+
+Otras técnicas de oclusión¶
+Además del sistema de portal y los métodos manuales, existen otras técnicas de oclusión, como la selección de oclusión basada en ráster. Algunos de estos pueden estar disponibles a través de complementos o pueden estar disponibles en el núcleo de Godot en el futuro.
+
+Objetos transparentes¶
+Como se mencionó antes, Godot clasifica los objetos por material y shader para mejorar el rendimiento. Esto, sin embargo, no se puede hacer en objetos transparentes. Los objetos transparentes se renderizan de atrás hacia adelante para hacer que se mezclen con lo que hay detrás del trabajo. Por lo tanto ¡intenta reducir al mínimo la transparencia de los objetos! Si un objeto tiene una sección pequeña con transparencia, intenta hacer de esa sección un material independiente.Godot ordena los objetos por Material y Shader para mejorar el rendimiento. Sin embargo, esto no se puede hacer con objetos transparentes. Los objetos transparentes se renderizan de atrás hacia adelante para combinarlos con lo que hay detrás. Como resultado, intente utilizar la menor cantidad posible de objetos transparentes. Si un objeto tiene una sección pequeña con transparencia, intente hacer de esa sección una superficie separada con su propio material.
+
+Para obtener más información, consulte GPU optimizations doc.
+
+Nivel de detalle (LOD)¶
+En algunas situaciones, particularmente a distancia, puede ser una buena idea ** reemplazar geometrías complejas con versiones más simples **. El usuario final probablemente no podrá ver mucha diferencia. Considere mirar una gran cantidad de árboles a lo lejos. Existen varias estrategias para reemplazar modelos a diferentes distancias. Puede usar modelos con polígonos mas bajos o usar transparencia para simular geometrías más complejas.
+
+Vallas publicitarias e impostores¶
+La versión más simple de usar la transparencia para lidiar con LOD son los billboards. Por ejemplo, puede utilizar un solo quad transparente para representar un árbol a distancia. Esto puede ser muy económico de renderizar, a menos que, por supuesto, haya muchos árboles uno frente al otro. En cuyo caso la transparencia puede comenzar a consumir la tasa de llenado (para obtener más información sobre la tasa de llenado, consulte: ref: doc_gpu_optimization).
+
+Una alternativa es renderizar no solo un árbol, sino un numero de arboles juntos como grupo. Esto puede ser efectivo especialmente si puedes ver el área pero no puedes aproximarte físicamente en el juego.
+
+Puede hacer impostores renderizando vistas previas de un objeto en diferentes ángulos. O incluso puede ir un paso más allá y volver a renderizar periódicamente una vista de un objeto en una textura para usarla como un impostor. A distancia, debe mover al espectador una distancia considerable para que el ángulo de visión cambie significativamente. Esto puede ser complejo para que funcione, pero puede valer la pena según el tipo de proyecto que esté realizando.
+
+Usar la instanciación (MultiMesh)¶
+Si hay que dibujar varios objetos iguales en el mismo lugar o cercanos entre sí, intenta usar MultiMesh en su lugar. MultiMesh permite dibujar decenas de miles de objetos con un coste de rendimiento muy bajo, lo que lo hace ideal para multitudes, hierba, partículas, etc.
+
+Véase también el documento Using MultiMesh.
+
+Bake de iluminación¶
+La iluminación de objetos es una de las operaciones de renderizado más costosas. La iluminación en tiempo real, las sombras (especialmente luces múltiples) y el GI son especialmente costosos. Simplemente pueden ser demasiado para que los manejen los dispositivos móviles de menor potencia.
+
+Considere usar iluminación horneada , especialmente para dispositivos móviles. Esto puede parecer fantástico, pero tiene la desventaja de que no será dinámico. A veces, esta es una compensación que vale la pena hacer.
+
+En general, si varias luces necesitan afectar una escena, es mejor usar Baked lightmaps. Hornear también puede mejorar la calidad de la escena al agregar rebotes de luz indirectos.
+
+Animación y skinning¶
+La animación y la animación de vértices, como el desollado y la transformación, pueden ser muy costosas en algunas plataformas. Es posible que deba reducir considerablemente el recuento de polígonos para los modelos animados o limitar el número de ellos en la pantalla en un momento dado.
+
+Mundos extensos¶
+Si está creando mundos grandes, hay consideraciones diferentes que le puede ser familiar en los juegos más pequeños.
+
+Mundos grandes pueden necesitar ser construidos en tiles que se pueden cargar bajo demanda mientras se mueve por el mundo. Esto puede evitar que el uso de la memoria se vaya de las manos y también limitar el procesamiento necesario al área local.
+
+También puede haber fallos de representación y física debido a un error de coma flotante en mundos grandes. Es posible que pueda usar técnicas como orientar el mundo alrededor del jugador (en lugar de al revés) o cambiar el origen periódicamente para mantener las cosas centradas .Vector3(0, 0, 0)
