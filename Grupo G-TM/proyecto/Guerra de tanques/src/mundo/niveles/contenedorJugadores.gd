@@ -1,7 +1,6 @@
 extends Spatial
 
 
-
 signal aparece_jugador
 var puntos_de_spawn = []
 var Contador_jugadores = 0
@@ -75,3 +74,10 @@ remote func bienvenida(toAddArray):
 			var agregar = load(toAddDict.filename).instance()
 			agregar.name  = toAddDict.name
 			self.add_child(agregar)
+
+
+
+
+
+
+

@@ -18,7 +18,7 @@ var info_servidor = {
 var actualNet
 var jugador = {}
 var enUnServidor = false
-
+var posicion_tp = Vector3(63,0,67)
 
 
 func _ready():
