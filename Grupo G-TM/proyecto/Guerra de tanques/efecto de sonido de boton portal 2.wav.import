@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/efecto de sonido de boton portal 2.wav-56433d557f1a2d77de7c0f624ef8908d.sample"
+
+[deps]
+
+source_file="res://efecto de sonido de boton portal 2.wav"
+dest_files=[ "res://.import/efecto de sonido de boton portal 2.wav-56433d557f1a2d77de7c0f624ef8908d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

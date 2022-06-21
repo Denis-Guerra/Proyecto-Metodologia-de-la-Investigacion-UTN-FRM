@@ -48,3 +48,15 @@ func _on_Unirse_mouse_entered():
 
 func _on_seleccionTanque_mouse_entered():
 	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()
+
+
+func _on_Unirse_button_down():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
+
+
+func _on_host_button_down():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
+
+
+func _on_seleccionTanque_button_down():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
