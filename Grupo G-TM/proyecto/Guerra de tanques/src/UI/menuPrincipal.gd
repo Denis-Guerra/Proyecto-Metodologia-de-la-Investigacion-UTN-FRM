@@ -36,3 +36,15 @@ func _on_port_text_changed(new_text):
 
 func _on_seleccionTanque_pressed():
 	get_tree().change_scene("res://src/UI/SeleccionTanque.tscn")
+
+func _on_host_mouse_entered():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()
+
+
+func _on_Unirse_mouse_entered():
+	 get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()
+
+
+
+func _on_seleccionTanque_mouse_entered():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()

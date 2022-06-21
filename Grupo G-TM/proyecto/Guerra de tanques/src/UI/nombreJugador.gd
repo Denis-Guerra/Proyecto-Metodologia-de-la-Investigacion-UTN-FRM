@@ -22,3 +22,11 @@ func _respuesta_http_completada(result, response_code, headers, cuerpo):
 	if len(para_buscar_en) > 0:
 		text = para_buscar_en
 	
+
+
+
+	
+
+
+func _on_Unirse_mouse_entered():
+	pass # Replace with function body.
