@@ -29,3 +29,34 @@ func _on_btnTanque3_pressed():
 	Gamestate.informacion_del_jugador.tanque = tanque3
 	Network.seleccion_mapa()
 	get_tree().change_scene("res://src/UI/playerLevelSelection.tscn")
+
+
+func _on_btnTanque1_mouse_entered():
+	get_tree().get_nodes_in_group("s")[0].get_node("CLICK").play()
+
+
+func _on_btnTanque1_button_down():
+	get_tree().get_nodes_in_group("s")[0].get_node("CLICK2").play()
+	
+	
+
+
+func _on_btnTanque2_mouse_entered():
+	get_tree().get_nodes_in_group("s")[0].get_node("CLICK").play()
+	
+
+
+func _on_btnTanque2_button_down():
+	get_tree().get_nodes_in_group("s")[0].get_node("CLICK2").play()
+	
+	
+
+
+func _on_btnTanque3_mouse_entered():
+	get_tree().get_nodes_in_group("s")[0].get_node("CLICK").play()
+	
+	
+
+
+func _on_btnTanque3_button_down():
+	get_tree().get_nodes_in_group("s")[0].get_node("CLICK2").play()

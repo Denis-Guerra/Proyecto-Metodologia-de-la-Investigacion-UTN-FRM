@@ -2,7 +2,7 @@
 
 [ext_resource path="res://src/UI/listaJugadores.tscn" type="PackedScene" id=1]
 [ext_resource path="res://clic.wav" type="AudioStream" id=2]
-[ext_resource path="res://src/UI/nombreJugador.gd" type="Script" id=3]
+[ext_resource path="res://src/UI/PanelPreJuego.gd" type="Script" id=3]
 [ext_resource path="res://src/UI/listaJugadores.gd" type="Script" id=4]
 [ext_resource path="res://src/UI/menuPrincipal.gd" type="Script" id=5]
 [ext_resource path="res://efecto de sonido de boton portal 2.wav" type="AudioStream" id=6]
@@ -21,50 +21,46 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -3.0
-margin_top = -195.0
-margin_right = 353.0
-margin_bottom = 92.0
+margin_left = -215.0
+margin_top = -190.0
+margin_right = 161.0
+margin_bottom = 114.0
 
 [node name="nombreJugador" type="LineEdit" parent="PanelRed"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -59.1629
-margin_top = 29.9706
-margin_right = 64.8371
-margin_bottom = 53.9706
-script = ExtResource( 3 )
+margin_left = -61.0
+margin_top = 46.0
+margin_right = 63.0
+margin_bottom = 70.0
 
 [node name="HTTPRequest" type="HTTPRequest" parent="PanelRed/nombreJugador"]
 
 [node name="port" type="LineEdit" parent="PanelRed"]
 anchor_top = 0.667
 anchor_bottom = 0.667
-margin_left = 66.0
-margin_top = -7.429
-margin_right = 141.001
-margin_bottom = 16.571
+margin_left = 77.0
+margin_top = -9.76799
+margin_right = 152.001
+margin_bottom = 14.232
 text = "25565"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="PanelRed"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -60.0
-margin_top = 9.0
-margin_right = 66.0
-margin_bottom = 23.0
-text = "Nombre del Jugador"
+margin_left = -74.0
+margin_top = 20.0
+margin_right = 80.0
+margin_bottom = 34.0
+text = "NOMBRE DEL JUGADOR:"
 
 [node name="Label2" type="Label" parent="PanelRed"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -156.0
-margin_top = 138.0
-margin_right = -72.9999
-margin_bottom = 152.0
+margin_left = -158.0
+margin_top = 156.0
+margin_right = -74.9999
+margin_bottom = 170.0
 text = "IP:"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -73,10 +69,10 @@ __meta__ = {
 [node name="Label3" type="Label" parent="PanelRed"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -165.0
-margin_top = 188.0
-margin_right = -81.9996
-margin_bottom = 202.0
+margin_left = -166.0
+margin_top = 198.0
+margin_right = -120.0
+margin_bottom = 227.0
 text = "Puerto:"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -85,11 +81,52 @@ __meta__ = {
 [node name="serverIP" type="LineEdit" parent="PanelRed"]
 anchor_top = 0.544
 anchor_bottom = 0.544
-margin_left = 46.0
-margin_top = -23.128
-margin_right = 161.0
-margin_bottom = 0.871979
+margin_left = 60.0
+margin_top = -15.376
+margin_right = 152.0
+margin_bottom = 8.62399
 text = "192.168.1.27"
+
+[node name="botones" type="Node2D" parent="PanelRed"]
+position = Vector2( -297, -110 )
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelRed/botones"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="TextureButton" type="TextureButton" parent="PanelRed/botones/MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Unirse" type="Button" parent="PanelRed/botones/MarginContainer/TextureButton"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 476.0
+margin_top = 242.0
+margin_right = 640.0
+margin_bottom = 263.0
+text = "UNIRSE A UN SERVIDOR"
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelRed/botones"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="TextureButton2" type="TextureButton" parent="PanelRed/botones/MarginContainer2"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="host" type="Button" parent="PanelRed/botones/MarginContainer2/TextureButton2"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 498.0
+margin_top = 284.0
+margin_right = 604.0
+margin_bottom = 304.0
+text = "HOSTEAR SERVER"
 
 [node name="PanelPreJuego" type="Panel" parent="."]
 visible = false
@@ -97,10 +134,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -81.5
-margin_top = -137.0
-margin_right = 81.5
-margin_bottom = 137.0
+margin_left = -215.0
+margin_top = -190.0
+margin_right = 161.0
+margin_bottom = 114.0
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -110,21 +148,20 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -42.0842
-margin_top = -28.0229
-margin_right = 44.9158
-margin_bottom = -8.02292
-text = "Seleccionar Tanque"
+margin_left = -84.0
+margin_top = -54.0
+margin_right = 73.0
+margin_bottom = -34.0
+text = "SELECCIONAR TANQUE"
 
 [node name="Label" type="Label" parent="PanelPreJuego"]
-margin_left = 21.0
-margin_top = 13.0
-margin_right = 143.0
-margin_bottom = 27.0
-text = "jugadores conectados:"
+margin_left = 102.0
+margin_top = 27.0
+margin_right = 273.0
+margin_bottom = 41.0
+text = "JUGADORES CONECTADOS:"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelPreJuego"]
-visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -150,54 +187,14 @@ stream = ExtResource( 2 )
 [node name="click2" type="AudioStreamPlayer2D" parent="sonidos"]
 stream = ExtResource( 6 )
 
-[node name="botones" type="Node2D" parent="."]
-
-[node name="MarginContainer" type="MarginContainer" parent="botones"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="TextureButton" type="TextureButton" parent="botones/MarginContainer"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Unirse" type="Button" parent="botones/MarginContainer/TextureButton"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 679.0
-margin_top = 227.0
-margin_right = 820.0
-margin_bottom = 248.0
-text = "Unirse a un servidor"
-
-[node name="MarginContainer2" type="MarginContainer" parent="botones"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="TextureButton2" type="TextureButton" parent="botones/MarginContainer2"]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="host" type="Button" parent="botones/MarginContainer2/TextureButton2"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 697.0
-margin_top = 266.5
-margin_right = 803.0
-margin_bottom = 286.5
-text = "Hostear server"
-
 [connection signal="request_completed" from="PanelRed/nombreJugador/HTTPRequest" to="PanelRed/nombreJugador" method="_on_HTTPRequest_request_completed"]
 [connection signal="text_changed" from="PanelRed/port" to="." method="_on_port_text_changed"]
+[connection signal="button_down" from="PanelRed/botones/MarginContainer/TextureButton/Unirse" to="." method="_on_Unirse_button_down"]
+[connection signal="mouse_entered" from="PanelRed/botones/MarginContainer/TextureButton/Unirse" to="." method="_on_Unirse_mouse_entered"]
+[connection signal="pressed" from="PanelRed/botones/MarginContainer/TextureButton/Unirse" to="." method="_on_join_pressed"]
+[connection signal="button_down" from="PanelRed/botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_button_down"]
+[connection signal="mouse_entered" from="PanelRed/botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_mouse_entered"]
+[connection signal="pressed" from="PanelRed/botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_pressed"]
 [connection signal="button_down" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_button_down"]
 [connection signal="mouse_entered" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_mouse_entered"]
 [connection signal="pressed" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_pressed"]
-[connection signal="button_down" from="botones/MarginContainer/TextureButton/Unirse" to="." method="_on_Unirse_button_down"]
-[connection signal="mouse_entered" from="botones/MarginContainer/TextureButton/Unirse" to="." method="_on_Unirse_mouse_entered"]
-[connection signal="pressed" from="botones/MarginContainer/TextureButton/Unirse" to="." method="_on_join_pressed"]
-[connection signal="button_down" from="botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_button_down"]
-[connection signal="mouse_entered" from="botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_mouse_entered"]
-[connection signal="pressed" from="botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_pressed"]

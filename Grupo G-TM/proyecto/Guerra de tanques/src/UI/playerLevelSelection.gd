@@ -19,3 +19,34 @@ func _on_StartGame_pressed():
 func actualizar_nuevo_jugador(id):
 	print(self," welcoming ",id)
 	$Panel/levelDisplayer.actualizar_nuevo_jugador(id)
+
+
+func _on_IniciaPartida_button_down():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
+
+
+func _on_IniciaPartida_mouse_entered():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()
+	
+	
+
+
+func _on_Siguiente_button_down():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
+
+
+
+
+func _on_Siguiente_mouse_entered():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()
+	
+
+
+func _on_Anterior_button_down():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
+	
+
+
+
+func _on_Anterior_mouse_entered():
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()

@@ -29,4 +29,4 @@ func _respuesta_http_completada(result, response_code, headers, cuerpo):
 
 
 func _on_Unirse_mouse_entered():
-	pass # Replace with function body.
+	get_tree().get_nodes_in_group("sonidos")[0].get_node("click").play()

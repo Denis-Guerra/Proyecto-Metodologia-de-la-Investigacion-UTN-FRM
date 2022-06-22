@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/UI/listaJugadores.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/UI/playerLevelSelection.gd" type="Script" id=2]
 [ext_resource path="res://src/UI/visualizadorDeNivel.gd" type="Script" id=3]
+[ext_resource path="res://clic.wav" type="AudioStream" id=4]
+[ext_resource path="res://efecto de sonido de boton portal 2.wav" type="AudioStream" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.458824, 0.458824, 0.458824, 1 )
@@ -24,6 +26,10 @@ shadow_offset = Vector2( 0.114, 0 )
 [node name="seleccionNivel" type="Control" groups=["wellcoming"]]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 43.0
+margin_top = 19.0
+margin_right = 43.0
+margin_bottom = 19.0
 script = ExtResource( 2 )
 
 [node name="Panel" type="Panel" parent="."]
@@ -45,22 +51,20 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -46.0
-margin_top = -72.0
-margin_right = 46.0
+margin_left = -49.0
+margin_top = -85.0
+margin_right = 51.0
+margin_bottom = -13.0
 text = "Iniciar Partida"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="levelDisplayer" type="Panel" parent="Panel"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -132.5
-margin_top = -143.5
-margin_right = 132.5
+margin_left = -132.0
+margin_top = -148.5
+margin_right = 133.0
 margin_bottom = 143.5
 script = ExtResource( 3 )
 __meta__ = {
@@ -69,11 +73,11 @@ __meta__ = {
 
 [node name="NombreNivel" type="Label" parent="Panel/levelDisplayer"]
 anchor_right = 1.0
-margin_left = 70.5
-margin_top = 1.0
-margin_right = -83.5
-margin_bottom = 40.0
-text = "Nombre de mapa"
+margin_left = 39.5
+margin_top = 4.0
+margin_right = -114.5
+margin_bottom = 43.0
+text = "NOMBRE DE MAPA"
 align = 1
 valign = 1
 
@@ -81,10 +85,10 @@ valign = 1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = -244.0
-margin_right = -8.0
-margin_bottom = -8.0
+margin_left = 9.5
+margin_top = -249.0
+margin_right = -6.5
+margin_bottom = -9.0
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -100,11 +104,11 @@ margin_bottom = 36.2236
 [node name="label" type="Label" parent="Panel/levelDisplayer"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -84.5244
-margin_top = 23.0173
-margin_right = -9.52441
-margin_bottom = 37.0173
-text = "numero"
+margin_left = -101.5
+margin_top = 16.0
+margin_right = -13.5
+margin_bottom = 30.0
+text = "NÚMERO"
 align = 2
 
 [node name="Siguiente" type="Button" parent="Panel/levelDisplayer"]
@@ -112,10 +116,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = 87.5
-margin_top = -36.0
-margin_right = 157.5
-margin_bottom = 36.0
+margin_left = 68.5
+margin_top = -40.5
+margin_right = 139.5
+margin_bottom = 31.5
 text = "Siguiente"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -124,18 +128,33 @@ __meta__ = {
 [node name="Anterior" type="Button" parent="Panel/levelDisplayer"]
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = -157.5
-margin_top = -36.0
-margin_right = -81.5
-margin_bottom = 36.0
+margin_left = -130.5
+margin_top = -37.5
+margin_right = -54.5
+margin_bottom = 34.5
 text = "Anterior"
 
 [node name="PreGameClientPanel" parent="." instance=ExtResource( 1 )]
-margin_left = -472.987
-margin_top = -270.58
-margin_right = -309.987
-margin_bottom = 3.41962
+visible = false
+margin_left = -669.136
+margin_top = -271.0
+margin_right = -506.136
+margin_bottom = 2.9996
 
+[node name="Node2D" type="Node2D" parent="." groups=["sonidos"]]
+
+[node name="click" type="AudioStreamPlayer2D" parent="Node2D"]
+stream = ExtResource( 4 )
+
+[node name="click2" type="AudioStreamPlayer2D" parent="Node2D"]
+stream = ExtResource( 5 )
+
+[connection signal="button_down" from="Panel/IniciaPartida" to="." method="_on_IniciaPartida_button_down"]
+[connection signal="mouse_entered" from="Panel/IniciaPartida" to="." method="_on_IniciaPartida_mouse_entered"]
 [connection signal="pressed" from="Panel/IniciaPartida" to="." method="_on_StartGame_pressed"]
+[connection signal="button_down" from="Panel/levelDisplayer/Siguiente" to="." method="_on_Siguiente_button_down"]
+[connection signal="mouse_entered" from="Panel/levelDisplayer/Siguiente" to="." method="_on_Siguiente_mouse_entered"]
 [connection signal="pressed" from="Panel/levelDisplayer/Siguiente" to="Panel/levelDisplayer" method="_on_Next_pressed"]
+[connection signal="button_down" from="Panel/levelDisplayer/Anterior" to="." method="_on_Anterior_button_down"]
+[connection signal="mouse_entered" from="Panel/levelDisplayer/Anterior" to="." method="_on_Anterior_mouse_entered"]
 [connection signal="pressed" from="Panel/levelDisplayer/Anterior" to="Panel/levelDisplayer" method="_on_Previous_pressed"]
