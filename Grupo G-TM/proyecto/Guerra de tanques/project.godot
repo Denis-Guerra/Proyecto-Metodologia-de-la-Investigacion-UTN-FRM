@@ -23,6 +23,7 @@ config/icon="res://icon.png"
 Gamestate="*res://src/redes/estadoDejuego.gd"
 Network="*res://src/redes/redes.gd"
 contJug="*res://src/mundo/niveles/contenedorJugadores.gd"
+MusicaFondo="*res://MusicaFondo.tscn"
 
 [input]
 

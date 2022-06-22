@@ -60,3 +60,10 @@ func _on_host_button_down():
 
 func _on_seleccionTanque_button_down():
 	get_tree().get_nodes_in_group("sonidos")[0].get_node("click2").play()
+	
+var musica_fondo = preload("res://Denny Schneidemesser - Entering the Stronghold.ogg")
+
+func _ready2():
+	MusicaFondo.musica_fondo(musica_fondo)
+
+		

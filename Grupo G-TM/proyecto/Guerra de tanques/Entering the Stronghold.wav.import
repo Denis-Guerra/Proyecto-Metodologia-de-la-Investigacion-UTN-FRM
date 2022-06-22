@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Entering the Stronghold.wav-ef45d645d74f8aba599a1a1dd41857f8.sample"
+
+[deps]
+
+source_file="res://Entering the Stronghold.wav"
+dest_files=[ "res://.import/Entering the Stronghold.wav-ef45d645d74f8aba599a1a1dd41857f8.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
