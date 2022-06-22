@@ -96,43 +96,43 @@ material_override = SubResource( 9 )
 use_collision = true
 
 [node name="CSGBox10" type="CSGBox" parent="CSGCombiner2"]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 112.717, 2.2101, -0.345156 )
-width = 190.0
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 141.72, 2.61307, -0.345156 )
+width = 349.465
 height = 30.0
-depth = 5.11535
+depth = 57.0838
 
-[node name="CSGBox9" type="CSGBox" parent="CSGCombiner2"]
-transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -112.908, 2.2101, 0.196384 )
-width = 190.0
-height = 30.0
-depth = 5.11535
-
-[node name="CSGBox8" type="CSGBox" parent="CSGCombiner2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169712, 2.2101, -94.514 )
-use_collision = true
-width = 230.781
-height = 30.0
-depth = 5.11535
-
-[node name="CSGBox7" type="CSGBox" parent="CSGCombiner2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169712, 2.2101, 95.1068 )
-width = 230.781
-height = 30.0
-depth = 5.11535
-
-[node name="CSGBox" type="CSGBox" parent="CSGCombiner2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 114.055, 6.73138, -0.282547 )
+[node name="CSGBox" type="CSGBox" parent="CSGCombiner2/CSGBox10"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.0626099, 4.52128, 20.3867 )
 operation = 2
-width = 10.5346
+width = 17.0921
 height = 12.0058
 depth = 27.1936
 
-[node name="CSGBox2" type="CSGBox" parent="CSGCombiner2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -113.517, 6.57741, 8.3344 )
+[node name="CSGBox9" type="CSGBox" parent="CSGCombiner2"]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -148.818, 2.81306, 0.196384 )
+width = 400.0
+height = 30.0
+depth = 70.0
+
+[node name="CSGBox2" type="CSGBox" parent="CSGCombiner2/CSGBox9"]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.13802, 4.31907, -24.8946 )
 operation = 2
-width = 10.0
+width = 20.5395
 height = 12.0
 depth = 27.8
+
+[node name="CSGBox8" type="CSGBox" parent="CSGCombiner2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169712, 2.64995, -129.36 )
+use_collision = true
+width = 230.781
+height = 30.0
+depth = 68.6891
+
+[node name="CSGBox7" type="CSGBox" parent="CSGCombiner2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169712, 2.85255, 125.161 )
+width = 230.781
+height = 30.0
+depth = 63.0951
 
 [node name="CSGCombiner" type="CSGCombiner" parent="."]
 material_override = SubResource( 6 )
@@ -293,7 +293,7 @@ shadow_enabled = true
 directional_shadow_max_distance = 200.0
 
 [node name="Area" type="Area" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 169.115, 0, 17.0469 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 183.107, 0, 17.0469 )
 script = ExtResource( 6 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Area"]
@@ -301,11 +301,13 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -56.1591, 6.76831, -17.3086 )
 shape = SubResource( 10 )
 
 [node name="posicion_Prueba" type="Sprite3D" parent="Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -303.168, 3.01922, -8.53133 )
 
 [node name="Position3D" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.413714, 1.89558, 86.3032 )
 
 [node name="Area2" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15.1547, 0, 0 )
 script = ExtResource( 9 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Area2"]
