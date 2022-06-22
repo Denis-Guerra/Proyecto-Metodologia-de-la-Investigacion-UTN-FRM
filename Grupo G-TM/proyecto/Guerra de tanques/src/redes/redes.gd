@@ -10,9 +10,9 @@ signal jugador_Desconectado
 
 
 var info_servidor = {
-	name = "Server",      # name servidor
+	name = "Server",      # nombre servidor
 	maximo_jugadores = 4,      # maximo jugadores
-	puerto_usado = 4546         # puerto
+	puerto_usado = 28960         # puerto
 }
 
 var actualNet
@@ -105,7 +105,7 @@ func unirse_a_servidor(ip):
 	var red = NetworkedMultiplayerENet.new()
 	
 	if (red.create_client(ip, int(info_servidor.puerto_usado)) != OK):
-		print("fallo la ceracion del server")
+		print("fallo la creacion del server")
 		emit_signal("conexion_fallida")
 		return false
 	print("creado el cliente")
