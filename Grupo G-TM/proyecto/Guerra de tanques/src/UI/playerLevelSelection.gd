@@ -7,7 +7,6 @@ func _ready():
 		botones_desactivados()
 
 func botones_desactivados():
-	$Panel/seleccionNivel.disabled = true
 	$Panel/levelDisplayer/Siguiente.disabled = true
 	$Panel/levelDisplayer/Anterior.disabled = true
 

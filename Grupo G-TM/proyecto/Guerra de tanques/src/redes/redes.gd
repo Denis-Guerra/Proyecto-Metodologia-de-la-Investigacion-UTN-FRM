@@ -10,9 +10,9 @@ signal jugador_Desconectado
 
 
 var info_servidor = {
-	name = "Server",      # nombre servidor
+	name = "Server",           # nombre servidor
 	maximo_jugadores = 4,      # maximo jugadores
-	puerto_usado = 28960         # puerto
+	puerto_usado = 28960       # puerto
 }
 
 var actualNet
@@ -39,7 +39,7 @@ func _jugador_se_conecta(id):
 
 func _jugador_se_desconecta(id):
 	print("jugador ", jugador[id].name, " desconectado del servidor ")
-	# Update the player tables
+	
 	if (get_tree().is_network_server()):
 		
 		sacar_jugador(id)
@@ -80,17 +80,13 @@ func _host_iniciado():
 
 
 
-
-
-
-
-
 func create_server():
 	
 	var red = NetworkedMultiplayerENet.new()
 	
 	
 	var server_creation_info = red.create_server(info_servidor.puerto_usado, info_servidor.maximo_jugadores)
+	
 	if (server_creation_info != OK):
 		print("fallo la creacion del server, ",server_creation_info)
 		return
@@ -99,6 +95,7 @@ func create_server():
 	get_tree().set_network_peer(red)
 	registro_jugador(Gamestate.informacion_del_jugador)
 	emit_signal("creacion_de_server")
+	print("servidor creadoooo")
 
 
 func unirse_a_servidor(ip):

@@ -12,8 +12,9 @@ func _host_iniciado():
 	$PanelRed.visible = false
 
 func _si_unido_al_servidor():
-	$PreGameClientPanel.visible = true
+	#$panelClientePreJuego.visible = true
 	$PanelRed.visible = false
+	get_tree().change_scene("res://src/UI/SeleccionTanque.tscn")
 
 
 func _on_host_pressed():
