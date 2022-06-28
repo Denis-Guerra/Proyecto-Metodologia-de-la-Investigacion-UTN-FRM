@@ -33,7 +33,6 @@ func _input(event):
 func actualiza_server():
 	rpc_id(1, "cola_entrada", gen_input(), informacion_del_jugador.net_id)
 
-
 func gen_blank_input():
 	var res = {}
 	res["movement"] = Vector3.ZERO
@@ -70,10 +69,6 @@ func get_my_input(net_id):
 			return gen_blank_input()
 		else:
 			return gen_suicide_input()
-
-
-
-
 
 
 

@@ -147,8 +147,6 @@ func actualizar_jugador(net_id, key, new_value):
 	(jugador[net_id] as Dictionary)[key] = new_value
 
 
-
-
 func mapa_selecionado():
 	rpc("seleccion_mapa")
 	seleccion_mapa()
@@ -162,11 +160,9 @@ func coordinacion_inicio_juego(cargar):
 	inicio_juego(cargar)
 
 
-
 remote func inicio_juego(cargar):
 	var EscenaCargada = load(cargar)
 	get_tree().change_scene_to(EscenaCargada)
-
 
 
 remote func jugador_listo(net_id):
