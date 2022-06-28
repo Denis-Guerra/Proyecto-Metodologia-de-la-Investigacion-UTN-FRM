@@ -205,7 +205,3 @@ remote func recibe_boost(id,toReceive):
 	return true
 
 
-
-
-
-

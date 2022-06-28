@@ -9,6 +9,7 @@ func _ready():
 func botones_desactivados():
 	$Panel/levelDisplayer/Siguiente.disabled = true
 	$Panel/levelDisplayer/Anterior.disabled = true
+	$Panel/IniciaPartida.disabled = true
 
 func _on_StartGame_pressed():
 	if Gamestate.informacion_del_jugador.net_id == 1:

@@ -47,6 +47,7 @@ remote func addPlayer(playerIdx):
 	print(agregar.translation)
 	Contador_jugadores += 1
 	Actualiza_camara()
+	Puntos_Spawn()
 
 remote func Actualiza_camara():
 	for child in get_children():
@@ -74,3 +75,7 @@ remote func bienvenida(toAddArray):
 			var agregar = load(toAddDict.filename).instance()
 			agregar.name  = toAddDict.name
 			self.add_child(agregar)
+
+func Puntos_Spawn():
+	if Contador_jugadores == 3:
+		Contador_jugadores=0
