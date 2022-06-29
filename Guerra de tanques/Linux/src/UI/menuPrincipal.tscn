@@ -1,0 +1,249 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://src/UI/listaJugadores.tscn" type="PackedScene" id=1]
+[ext_resource path="res://clic.wav" type="AudioStream" id=2]
+[ext_resource path="res://src/UI/PanelPreJuego.gd" type="Script" id=3]
+[ext_resource path="res://src/UI/listaJugadores.gd" type="Script" id=4]
+[ext_resource path="res://src/UI/menuPrincipal.gd" type="Script" id=5]
+[ext_resource path="res://efecto de sonido de boton portal 2.wav" type="AudioStream" id=6]
+[ext_resource path="res://Lets Coffee.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://src/mundo/fuente/Lets Coffee.otf" type="DynamicFontData" id=8]
+[ext_resource path="res://Denny Schneidemesser - Entering the Stronghold.ogg" type="AudioStream" id=9]
+[ext_resource path="res://src/UI/AudioStreamPlayer.gd" type="Script" id=10]
+
+[sub_resource type="DynamicFont" id=10]
+size = 22
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 20
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 26
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 20
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 20
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 20
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 20
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 20
+font_data = ExtResource( 7 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 20
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 24
+font_data = ExtResource( 8 )
+
+[node name="MenuPrincipal" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+
+[node name="PanelRed" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="nombreJugador" type="LineEdit" parent="PanelRed"]
+anchor_left = 0.396484
+anchor_top = 0.171667
+anchor_right = 0.612305
+anchor_bottom = 0.278333
+custom_fonts/font = SubResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HTTPRequest" type="HTTPRequest" parent="PanelRed/nombreJugador"]
+
+[node name="port" type="LineEdit" parent="PanelRed"]
+anchor_left = 0.234375
+anchor_top = 0.64
+anchor_right = 0.400391
+anchor_bottom = 0.696667
+custom_fonts/font = SubResource( 3 )
+text = "28960"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Label" type="RichTextLabel" parent="PanelRed"]
+anchor_left = 0.361328
+anchor_top = 0.0816667
+anchor_right = 0.658203
+anchor_bottom = 0.136667
+margin_left = 4.0
+margin_top = -1.0
+margin_right = 4.0
+margin_bottom = -1.0
+mouse_default_cursor_shape = 2
+custom_fonts/normal_font = SubResource( 1 )
+text = "NOMBRE DEL JUGADOR:"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Label2" type="Label" parent="PanelRed"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -309.0
+margin_top = 276.0
+margin_right = -154.0
+margin_bottom = 331.0
+custom_fonts/font = SubResource( 4 )
+text = "IP:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="PanelRed"]
+anchor_left = 0.140625
+anchor_top = 0.636667
+anchor_right = 0.216797
+anchor_bottom = 0.685
+custom_fonts/font = SubResource( 5 )
+text = "Puerto:"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="serverIP" type="LineEdit" parent="PanelRed"]
+anchor_left = 0.232422
+anchor_top = 0.451667
+anchor_right = 0.398438
+anchor_bottom = 0.516667
+custom_fonts/font = SubResource( 6 )
+text = "127.0.0.1"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="botones" type="Node2D" parent="PanelRed"]
+position = Vector2( -297, -110 )
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelRed/botones"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="TextureButton" type="TextureButton" parent="PanelRed/botones/MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Unirse" type="Button" parent="PanelRed/botones/MarginContainer/TextureButton"]
+anchor_left = 23.125
+anchor_top = 9.7
+anchor_right = 29.05
+anchor_bottom = 10.45
+custom_fonts/font = SubResource( 2 )
+text = "UNIRSE A UN SERVIDOR"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelRed/botones"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="TextureButton2" type="TextureButton" parent="PanelRed/botones/MarginContainer2"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="host" type="Button" parent="PanelRed/botones/MarginContainer2/TextureButton2"]
+anchor_left = 23.675
+anchor_top = 12.275
+anchor_right = 28.25
+anchor_bottom = 13.075
+custom_fonts/font = SubResource( 7 )
+text = "HOSTEAR SERVER"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PanelPreJuego" type="Panel" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="seleccionTanque" type="Button" parent="PanelPreJuego"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -132.0
+margin_top = -159.0
+margin_right = 90.0
+margin_bottom = -129.0
+custom_fonts/font = SubResource( 8 )
+text = "SELECCIONAR TANQUE"
+
+[node name="Label" type="Label" parent="PanelPreJuego"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -165.0
+margin_top = 107.0
+margin_right = 147.0
+margin_bottom = 141.0
+custom_fonts/font = SubResource( 9 )
+text = "JUGADORES CONECTADOS:"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelPreJuego"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 300.0
+margin_top = 183.0
+margin_right = -292.0
+margin_bottom = -232.0
+script = ExtResource( 4 )
+
+[node name="panelClientePreJuego" parent="." instance=ExtResource( 1 )]
+visible = false
+
+[node name="sonidos" type="Node2D" parent="." groups=["sonidos"]]
+
+[node name="click" type="AudioStreamPlayer2D" parent="sonidos"]
+position = Vector2( 1, -3 )
+stream = ExtResource( 2 )
+
+[node name="click2" type="AudioStreamPlayer2D" parent="sonidos"]
+stream = ExtResource( 6 )
+
+[node name="MusicaFondo" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+volume_db = -4.0
+autoplay = true
+script = ExtResource( 10 )
+
+[connection signal="request_completed" from="PanelRed/nombreJugador/HTTPRequest" to="PanelRed/nombreJugador" method="_on_HTTPRequest_request_completed"]
+[connection signal="text_changed" from="PanelRed/port" to="." method="_on_port_text_changed"]
+[connection signal="button_down" from="PanelRed/botones/MarginContainer/TextureButton/Unirse" to="." method="_on_Unirse_button_down"]
+[connection signal="mouse_entered" from="PanelRed/botones/MarginContainer/TextureButton/Unirse" to="." method="_on_Unirse_mouse_entered"]
+[connection signal="pressed" from="PanelRed/botones/MarginContainer/TextureButton/Unirse" to="." method="_on_join_pressed"]
+[connection signal="button_down" from="PanelRed/botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_button_down"]
+[connection signal="mouse_entered" from="PanelRed/botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_mouse_entered"]
+[connection signal="pressed" from="PanelRed/botones/MarginContainer2/TextureButton2/host" to="." method="_on_host_pressed"]
+[connection signal="button_down" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_button_down"]
+[connection signal="mouse_entered" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_mouse_entered"]
+[connection signal="pressed" from="PanelPreJuego/seleccionTanque" to="." method="_on_seleccionTanque_pressed"]

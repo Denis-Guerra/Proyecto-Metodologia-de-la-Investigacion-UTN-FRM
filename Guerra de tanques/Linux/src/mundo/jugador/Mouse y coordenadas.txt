@@ -1,0 +1,27 @@
+Mouse y coordenadas de entrada¶
+Acerca de¶
+El objetivo de este pequeño tutorial es evitar errores comunes sobre coordenadas de entrada, obtención de posiciones en relación a mouse y resolución, etc.
+
+Coordenadas de pantalla basadas en hardware¶
+La utilización de coordenadas de hardware tiene sentido en el caso de escribir interfaces de usuario complejas que deben funcionar en PC, como editores, MMOs, herramientas, etc. No tiene mucho sentido utilizarlas fuera de este ámbito.
+
+Coordenadas de pantalla de Viewport¶
+Godot utiliza Viewports para mostrar contenido y estos pueden ser escalados con diversas opciones (ver tutorial Múltiples resoluciones). A continuación, se utilizan las funciones de los nodos para obtener, por ejemplo, las coordenadas del ratón y el tamaño del viewport:
+
+GDScriptC#
+func _input(event):
+   # Mouse in viewport coordinates.
+   if event is InputEventMouseButton:
+       print("Mouse Click/Unclick at: ", event.position)
+   elif event is InputEventMouseMotion:
+       print("Mouse Motion at: ", event.position)
+
+   # Print the size of the viewport.
+   print("Viewport Resolution is: ", get_viewport_rect().size)
+También es posible preguntar al viewport por la posición del mouse:
+
+GDScriptC#
+get_viewport().get_mouse_position()
+Nota
+
+Cuando el modo del ratón está configurado como Input.MOUSE_MODE_CAPTURED, el valor event.position de InputEventMouseMotion es el centro de la pantalla. Usa event.relative en lugar de event.position y event.speed para procesar el movimiento del ratón y los cambios de posición.

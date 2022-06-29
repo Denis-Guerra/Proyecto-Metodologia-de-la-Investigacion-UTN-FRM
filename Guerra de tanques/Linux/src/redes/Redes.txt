@@ -1,0 +1,124 @@
+https://docs.godotengine.org/es/stable/tutorials/networking/high_level_multiplayer.html
+
+Inicializando como un servidor, escuchando en el puerto dado, con un número máximo de pares dado:
+var peer = NetworkedMultiplayerENet.new()
+peer.create_server(SERVER_PORT, MAX_PLAYERS)
+get_tree().network_peer = peer
+
+
+Inicializando como un cliente, conectándose a una IP y un puerto dados:
+var peer = NetworkedMultiplayerENet.new()
+peer.create_client(SERVER_IP, SERVER_PORT)
+get_tree().network_peer = peer
+
+
+Consigue el par de la red previamente establecido:
+get_tree().get_network_peer()
+
+
+Comprobando si el árbol se inicializó como servidor o cliente:
+get_tree().is_network_server()
+
+
+Terminar la función de red:
+get_tree().network_peer = null
+
+
+Administrar conexiones¶
+Algunos juegos aceptan conexiones en cualquier momento, otros durante la fase de lobby(vestíbulo). Se puede solicitar a Godot que ya no acepte conexiones en ningún punto (mira set_refuse_new_network_connections(bool) y métodos relacionados en SceneTree). Para administrar quién se conecta, Godot proporciona las siguientes señales en SceneTree:
+
+Servidor y Clientes:
+
+network_peer_connected(int id)
+
+network_peer_disconnected(int id)
+
+Las señales anteriores se invocan en cada peer conectado al servidor (incluso en el servidor) cuando un nuevo peer se conecta o desconecta. Los clientes se conectarán con una ID única mayor que 1, mientras que la ID de red peer 1 es siempre el servidor. Cualquier cosa por debajo de 1 debe manejarse como inválida. Puedes recuperar la ID para el sistema local a través de SceneTree.get_network_unique_id(). Estas IDs serán útiles sobre todo para la gestión del lobby y, en general, se deben almacenar ya que identifican a los peers conectados y, por tanto, a los jugadores. También puedes usar las IDs para enviar mensajes solo a ciertos peers.
+
+Clientes:
+
+connected_to_server
+
+connection_failed
+
+server_disconnected
+
+Una vez más, todas estas funciones son principalmente útiles para la gestión del lobby o para agregar/quitar jugadores en el momento. Para estas tareas, el servidor claramente tiene que funcionar como servidor y tu debes realizar tareas manualmente, como enviar un jugador recién conectado o información sobre otros jugadores que ya están conectados (por ejemplo, sus nombres, estadísticas, etc.).
+
+Los lobbys pueden ser implementados de la forma que desees, pero la manera más común es usar un nodo con el mismo nombre a través de escenas en todos los peers. Generalmente, un nodo/singleton autocargado es ideal para esto, para tener siempre acceso a, por ejemplo, "/root/lobby".
+
+RPC¶
+Para comunicarse entre peers, la forma más fácil es usar RPC (llamadas de procedimiento remoto). Esto se implementa como un conjunto de funciones en Node:
+
+rpc("function_name", <optional_args>)
+
+rpc_id(<peer_id>,"function_name", <optional_args>)
+
+rpc_unreliable("function_name", <optional_args>)
+
+rpc_unreliable_id(<peer_id>, "function_name", <optional_args>)
+
+También es posible sincronizar las variables de los miembros:
+
+rset("variable", value)
+
+rset_id(<peer_id>, "variable", value)
+
+rset_unreliable("variable", value)
+
+rset_unreliable_id(<peer_id>, "variable", value)
+
+Las funciones se pueden llamar de dos maneras:
+
+Confiable: la llamada a la función llegará sin importar qué, pero puede llevar más tiempo porque se retransmitirá en caso de falla.
+
+No Confiable: si la llamada de función no llega, no se retransmitirá, pero si llega, lo hará rápidamente.
+
+En la mayoría de los casos, confiable es deseado. No confiable es útil principalmente para sincronizar posiciones de objetos (la sincronización debe ocurrir constantemente, y si se pierde un paquete, no es tan malo porque finalmente llegará uno nuevo y es probable que esté desactualizado porque, mientras tanto el objeto se movió aún más, incluso si fue reenviado de manera confiable).
+
+También está la función get_rpc_sender_id en SceneTree que se puede usar para verificar qué peer (o ID de peer) envió una llamada RPC.
+
+De vuelta al lobby¶
+Volvamos al lobby. Imagina que cada jugador que se conecta al servidor se lo cuenta a todos.
+
+# Typical lobby implementation; imagine this being in /root/lobby.
+
+extends Node
+
+# Connect all functions
+
+func _ready():
+    get_tree().connect("network_peer_connected", self, "_player_connected")
+    get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
+    get_tree().connect("connected_to_server", self, "_connected_ok")
+    get_tree().connect("connection_failed", self, "_connected_fail")
+    get_tree().connect("server_disconnected", self, "_server_disconnected")
+
+# Player info, associate ID to data
+var player_info = {}
+# Info we send to other players
+var my_info = { name = "Johnson Magenta", favorite_color = Color8(255, 0, 255) }
+
+func _player_connected(id):
+    # Called on both clients and server when a peer connects. Send my info to it.
+    rpc_id(id, "register_player", my_info)
+
+func _player_disconnected(id):
+    player_info.erase(id) # Erase player from info.
+
+func _connected_ok():
+    pass # Only called on clients, not server. Will go unused; not useful here.
+
+func _server_disconnected():
+    pass # Server kicked us; show error and abort.
+
+func _connected_fail():
+    pass # Could not even connect to server; abort.
+
+remote func register_player(info):
+    # Get the id of the RPC sender.
+    var id = get_tree().get_rpc_sender_id()
+    # Store the info
+    player_info[id] = info
+
+    # Call function to update lobby UI here

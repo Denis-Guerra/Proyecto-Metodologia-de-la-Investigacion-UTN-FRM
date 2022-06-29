@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/mundo/niveles/contenedorJugadores.gd" type="Script" id=1]
+
+[node name="playersContainer" type="Spatial" groups=["wellcoming"]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.57093, -7.55285 )
+script = ExtResource( 1 )
