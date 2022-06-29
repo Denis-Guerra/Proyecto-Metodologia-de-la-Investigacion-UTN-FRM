@@ -117,9 +117,9 @@ __meta__ = {
 
 [node name="Label3" type="Label" parent="PanelRed"]
 anchor_left = 0.140625
-anchor_top = 0.645
+anchor_top = 0.636667
 anchor_right = 0.216797
-anchor_bottom = 0.693333
+anchor_bottom = 0.685
 custom_fonts/font = SubResource( 5 )
 text = "Puerto:"
 __meta__ = {
